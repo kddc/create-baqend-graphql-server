@@ -1,19 +1,10 @@
 import { codeBlock } from 'common-tags'
 
-import TypeDefsGenerator from './types/TypeDefsGenerator'
-import QueryTypeDefsGenerator from './types/QueryTypeDefsGenerator'
-
-import TypeResolversGenerator from './resolvers/TypeResolversGenerator'
-import QueryTypeResolversGenerator from './resolvers/QueryTypeResolversGenerator'
+import { generateObjectTypeDefs, generateQueryTypeDefs } from './types'
+import { generateObjectTypeResolvers, generateQueryTypeResolvers } from './resolvers'
 
 export default class SchemaGenerator {
-  constructor() {
-    this.typeDefsGenerator = new TypeDefsGenerator()
-    this.queryTypeDefsGenerator = new QueryTypeDefsGenerator()
-
-    this.typeResolversGenerator = new TypeResolversGenerator()
-    this.queryTypeResolversGenerator = new QueryTypeResolversGenerator()
-  }
+  constructor() {}
 
   generateSchema(schema) {
     let typeDefs = this.generateTypeDefs(schema.types)
@@ -24,23 +15,23 @@ export default class SchemaGenerator {
     }
   }
 
-  generateTypeDefs({ types, queryTypes }) {
-    let typeDefsCode = this.typeDefsGenerator.generateTypeDefs(types)
-    let queryTypeDefsCode = this.queryTypeDefsGenerator.generateQueryTypeDefs(queryTypes)
+  generateTypeDefs({ objectTypes, queryTypes }) {
+    let objectTypeDefs = generateObjectTypeDefs(objectTypes)
+    let queryTypeDefs = generateQueryTypeDefs(queryTypes)
     return codeBlock`
     let typeDefs = \`
-      ${typeDefsCode},
-      ${queryTypeDefsCode}
+      ${objectTypeDefs},
+      ${queryTypeDefs}
     \``;
   }
 
-  generateResolvers({ typeResolvers, queryTypeResolvers }) {
-    let typeResolversCode = this.typeResolversGenerator.generateTypeResolvers(typeResolvers)
-    let queryTypeResolversCode = this.queryTypeResolversGenerator.generateQueryTypeResolvers(queryTypeResolvers)
+  generateResolvers({ objectTypeResolvers, queryTypeResolvers }) {
+    let objectTypeResolverDefs = generateObjectTypeResolvers(objectTypeResolvers)
+    let queryTypeResolverDefs = generateQueryTypeResolvers(queryTypeResolvers)
     return codeBlock`
     let resolvers = {
-      ${typeResolversCode},
-      ${queryTypeResolversCode}
+      ${objectTypeResolverDefs},
+      ${queryTypeResolverDefs}
     }`;
   }
 }

@@ -1,17 +1,8 @@
-import TypesFactory from './types/TypesFactory'
-import QueryTypesFactory from './types/QueryTypesFactory'
-
-import TypeResolversFactory from './resolvers/TypeResolversFactory'
-import QueryTypeResolversFactory from './resolvers/QueryTypeResolversFactory'
+import { createObjectTypes, createQueryTypes } from './types'
+import { createObjectTypeResolvers, createQueryTypeResolvers } from './resolvers'
 
 export default class SchemaFactory {
-  constructor() {
-    this.typesFactory = new TypesFactory()
-    this.queryTypesFactory = new QueryTypesFactory()
-
-    this.typeResolversFactory = new TypeResolversFactory()
-    this.queryTypeResolversFactory = new QueryTypeResolversFactory()
-  }
+  constructor() {}
 
   createFromSchema(json) {
     let types = this.createTypesFromSchema(json)
@@ -23,19 +14,19 @@ export default class SchemaFactory {
   }
 
   createTypesFromSchema(json) {
-    let types = this.typesFactory.createFromSchema(json)
-    let queryTypes = this.queryTypesFactory.createFromTypes(types)
+    let objectTypes = createObjectTypes(json)
+    let queryTypes = createQueryTypes(objectTypes)
     return {
-      types,
+      objectTypes,
       queryTypes
     }
   }
 
-  createResolversFromTypes({types, queryTypes}) {
-    let typeResolvers = this.typeResolversFactory.createFromTypes(types)
-    let queryTypeResolvers = this.queryTypeResolversFactory.createFromQueryTypes(queryTypes)
+  createResolversFromTypes({objectTypes, queryTypes}) {
+    let objectTypeResolvers = createObjectTypeResolvers(objectTypes)
+    let queryTypeResolvers = createQueryTypeResolvers(queryTypes)
     return {
-      typeResolvers,
+      objectTypeResolvers,
       queryTypeResolvers
     }
   }
