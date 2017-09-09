@@ -22,7 +22,6 @@ const createObjectTypeResolvers = (types) => {
       name: type.name,
       resolvers: type.fields
       .filter((field) => {
-        console.log(field)
         return (field.superType === 'object' || field.superType === 'collection')
       })
       .map((field) => {
