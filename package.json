@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/index.js",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [],
   "author": "",

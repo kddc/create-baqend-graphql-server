@@ -1,6 +1,6 @@
 // import SchemaReader from '../../src/schema/readers/SchemaReader'
 import SchemaObjectFactory from '../../src/schema/factories/SchemaObjectFactory'
-import testSchema from './schema'
+import testSchema from './testSchema'
 
 const schemaObjectFactory = new SchemaObjectFactory(testSchema)
 
