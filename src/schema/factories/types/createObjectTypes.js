@@ -1,13 +1,13 @@
-import AttributeMapper from '../../mappers/AttributeMapper'
+import FieldParser from '../../parsers/FieldParser'
 
 const createObjectTypes = (json) => {
   return json.map((type) => {
     return {
-      name: AttributeMapper.getType(type.class),
+      name: ObjectFieldParser.getType(type.class),
       fields: type.fields.map((field) => {
         return {
           name: field.name,
-          ...AttributeMapper.parseType(field.type)
+          ...FieldParser.parseType(field.type)
         }
       })
     }

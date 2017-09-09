@@ -1,4 +1,4 @@
-const Primitives = [
+export const Primitives = [
   "String",
   "Integer",
   "Double",
@@ -12,13 +12,13 @@ const Primitives = [
   "JsonArray"
 ]
 
-const Collections = [
+export const Collections = [
   "collection.List",
   "collection.Set",
   "collection.Map"
 ]
 
-export default class AttributeMapper {
+export default class FieldParser {
   static getSuperType(baqendType) {
     return baqendType.replace(new RegExp('(\\/db\\/|\\[.*\\])', 'ig'), '')
   }
