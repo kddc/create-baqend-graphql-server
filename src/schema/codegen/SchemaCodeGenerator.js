@@ -39,7 +39,7 @@ export default class SchemaCodeGenerator {
   getTypeDefs() {
     return codeBlock`
     let typeDefs = \`
-      ${this.objectTypeDefs},
+      ${this.objectTypeDefs}
       ${this.queryTypeDefs}
     \``;
   }

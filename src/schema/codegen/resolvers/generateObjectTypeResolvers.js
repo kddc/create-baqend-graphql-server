@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import applyTemplate from '../../templates/applyTemplate'
+import applyTemplate from '../templates/applyTemplate'
 
 const generateObjectTypeResolvers = (typeResolvers) => {
   return codeBlock`
@@ -7,8 +7,7 @@ const generateObjectTypeResolvers = (typeResolvers) => {
     return codeBlock`
     ${typeResolver.name}: {
       ${typeResolver.resolvers.map((fieldResolver) =>  {
-        return codeBlock`
-        ${fieldResolver.name}:` + " " + applyTemplate(...fieldResolver.resolve)
+        return applyTemplate(fieldResolver.resolve[0], fieldResolver)
       }).join(',\n')}
     }
     `
