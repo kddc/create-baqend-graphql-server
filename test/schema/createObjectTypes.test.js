@@ -1,5 +1,5 @@
 import { createObjectTypes } from '../../src/schema/factories/types'
-const testSchema = [
+let schema = [
   {
     "class": "/db/TestClass",
     "superClass": "/db/Object",
@@ -20,18 +20,19 @@ const testSchema = [
   }
 ]
 
-// expected Output
-// [{
-//   name: 'TestClass',
-//   fields: [
-//     { name: 'string', superType: 'scalar', type: 'String' },
-//     { name: 'reference', superType: 'object', type: 'ReferenceClass' },
-//     { name: 'referenceCollection', superType: 'collection', type: 'ReferenceClass' }
-//   ]
-// }]
+let expectedObjectTypes = [
+  {
+    name: 'TestClass',
+    fields: [
+      { name: 'string', superType: 'scalar', type: 'String' },
+      { name: 'reference', superType: 'object', type: 'ReferenceClass' },
+      { name: 'referenceCollection', superType: 'collection', type: 'ReferenceClass' }
+    ]
+  }
+]
 
 describe('create objectTypes from schema', () => {
-  let objectTypes = createObjectTypes(testSchema)
+  let objectTypes = createObjectTypes(schema)
   let objectType = objectTypes[0]
   test('objectTypes is array', () => {
     expect(Array.isArray(objectTypes)).toBeTruthy()
@@ -39,6 +40,10 @@ describe('create objectTypes from schema', () => {
 
   test('objectTypes has correct length', () => {
     expect(objectTypes).toHaveLength(1)
+  })
+
+  test('objectTypes equal expectedObjectTypes', () => {
+    expect(objectTypes).toEqual(expectedObjectTypes)
   })
 
   test('objectType has correct properties', () => {

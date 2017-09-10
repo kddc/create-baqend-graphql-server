@@ -1,17 +1,55 @@
-// [ { name: 'Post', args: [], type: 'Post', superType: 'object' },
-//         { name: 'allPosts',
-//           args: [],
-//           type: 'Post',
-//           superType: 'collection' },
+import { createQueryTypeResolvers } from '../../src/schema/factories/resolvers'
 
-// [ { name: 'Post',
-//           type: 'Post',
-//           superType: 'object',
-//           resolve: '(root, args, context) => {\n  return resolveObjectQuery(\'Post\', args, context)\n}' },
-//         { name: 'allPosts',
-//           type: 'Post',
-//           superType: 'collection',
-//           resolve: '(root, args, context) => {\n  return resolveCollectionQuery(\'Post\', args, context)\n}' },
+let queryTypes = [
+  {
+    name: 'TestObject',
+    args: [],
+    type: 'TestObject',
+    superType: 'object'
+  },
+  {
+    name: 'allTestObjects',
+    args: [],
+    type: 'TestObject',
+    superType: 'collection'
+  }
+]
 
-// !!!!! [
-// ['{ author }', 'args', 'context'], ['resolveTypeReference', ['User', 'author', 'args', 'context']]
+let expectedQueryTypeResolvers = [
+  {
+    name: 'TestObject',
+    type: 'TestObject',
+    superType: 'object',
+    resolve: [
+      'resolveObjectQuery',
+      [ 'root', 'args', 'context' ],
+      [ '\'TestObject\'', 'args', 'context' ]
+    ]
+  },
+  {
+    name: 'allTestObjects',
+    type: 'TestObject',
+    superType: 'collection',
+    resolve: [
+      'resolveCollectionQuery',
+      [ 'root', 'args', 'context' ],
+      [ '\'TestObject\'', 'args', 'context' ]
+    ]
+  }
+]
+
+describe('create queryTypeResolvers from queryTypes', () => {
+  let queryTypeResolvers = createQueryTypeResolvers(queryTypes)
+
+  test('queryTypeResolvers is array', () => {
+    expect(Array.isArray(queryTypeResolvers)).toBeTruthy()
+  })
+
+  test('queryTypeResolvers has correct length', () => {
+    expect(queryTypeResolvers).toHaveLength(expectedQueryTypeResolvers.length)
+  })
+
+  test('queryTypeResolvers equals expectedQueryTypeResolvers', () => {
+    expect(queryTypeResolvers).toEqual(expectedQueryTypeResolvers)
+  })
+})

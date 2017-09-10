@@ -22,7 +22,7 @@ const testTypes = [
 ]
 
 
-describe('it should identify field types correctly', () => {
+describe('it should parse field types correctly', () => {
   testTypes.forEach((testType) => {
     test(`parse ${testType[0]}`, () => {
       const { superType, type } = FieldParser.parseType(testType[0])

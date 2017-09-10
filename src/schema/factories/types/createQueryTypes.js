@@ -27,3 +27,6 @@ const createQueryTypes = (objectTypes) => {
 }
 
 export default createQueryTypes
+export {
+  queryTypeTemplates
+}

@@ -4,9 +4,9 @@ import testSchema from './testSchema'
 
 const schemaObjectFactory = new SchemaObjectFactory(testSchema)
 
-describe('it should create a types object for code generation', () => {
+describe('schema object should match format', () => {
   let schema = schemaObjectFactory.get()
-  test('schema object should match format', () => {
+  test('schema object match format', () => {
     expect(schema).toEqual(expect.objectContaining({
       types: expect.any(Object),
       resolvers: expect.any(Object)
