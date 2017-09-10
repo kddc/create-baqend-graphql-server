@@ -76,7 +76,7 @@ describe('objectTypeResolvers should match format', () => {
           name: expect.any(String),
           type: expect.any(String),
           superType: expect.any(String),
-          resolve: expect.any(String)
+          resolve: expect.any(Object)
         }))
       })
     })
@@ -96,7 +96,7 @@ describe('queryTypeResolvers should match format', () => {
         name: expect.any(String),
         type: expect.any(String),
         superType: expect.any(String),
-        resolve: expect.any(String)
+        resolve: expect.any(Object)
       }))
     })
   })
