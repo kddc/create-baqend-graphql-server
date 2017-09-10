@@ -5,7 +5,7 @@ import testSchema from './testSchema'
 const schemaObjectFactory = new SchemaObjectFactory(testSchema)
 
 describe('schema object should match format', () => {
-  let schema = schemaObjectFactory.get()
+  let schema = schemaObjectFactory.getAll()
   test('schema object match format', () => {
     expect(schema).toEqual(expect.objectContaining({
       types: expect.any(Object),

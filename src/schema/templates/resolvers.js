@@ -8,7 +8,7 @@ const resolveObjectTypeReference = (callerArgs, resolverArgs) => codeBlock`
 
 const resolveObjectTypeReferenceCollection = (callerArgs, resolverArgs) => codeBlock`
   (${callerArgs}) => {
-    return resolveTypeReferenceCollection(${resolverArgs})
+    return resolveObjectTypeReferenceCollection(${resolverArgs})
   }
 `
 

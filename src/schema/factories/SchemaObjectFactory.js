@@ -27,7 +27,7 @@ export default class SchemaObjectFactory {
     return this.getResolvers()
   }
 
-  get() {
+  getAll() {
     return {
       types: this.getTypes(),
       resolvers: this.getResolvers()
