@@ -1,4 +1,4 @@
-import { createQueryTypeResolvers } from '../../src/schema/factories/resolvers'
+import createQueryTypeResolvers from './createQueryTypeResolvers'
 
 let queryTypes = [
   {

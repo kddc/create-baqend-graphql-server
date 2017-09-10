@@ -1,7 +1,5 @@
-import { createQueryTypes } from '../../src/schema/factories/types'
-import { queryTypeTemplates } from '../../src/schema/factories/types/createQueryTypes'
+import createQueryTypes, { queryTypeTemplates } from './createQueryTypes'
 
-// input
 let objectTypes = [
   {
     name: 'TestObject',

@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import { generateQueryTypeResolvers } from '../../src/schema/codegen/resolvers'
+import generateQueryTypeResolvers from './generateQueryTypeResolvers'
 
 let inputQueryTypeResolvers = [
   {

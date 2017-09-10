@@ -1,7 +1,7 @@
-import { createObjectTypes } from '../../src/schema/factories/types'
+import createObjectTypes from './createObjectTypes'
 let schema = [
   {
-    "class": "/db/TestClass",
+    "class": "/db/TestObject",
     "superClass": "/db/Object",
     "fields": [
       {
@@ -22,7 +22,7 @@ let schema = [
 
 let expectedObjectTypes = [
   {
-    name: 'TestClass',
+    name: 'TestObject',
     fields: [
       { name: 'string', superType: 'scalar', type: 'String' },
       { name: 'reference', superType: 'object', type: 'ReferenceClass' },
@@ -54,7 +54,7 @@ describe('create objectTypes from schema', () => {
   })
 
   test('objectType has correct name', () => {
-    expect(objectType.name).toBe('TestClass')
+    expect(objectType.name).toBe('TestObject')
   })
 
   test('objectType fields array has correct length', () => {

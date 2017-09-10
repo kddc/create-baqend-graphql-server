@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import { generateObjectTypeDefs } from '../../src/schema/codegen/types'
+import generateObjectTypeDefs from './generateObjectTypeDefs'
 
 let objectTypes = [
   {

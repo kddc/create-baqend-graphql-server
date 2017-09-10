@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import { generateQueryTypeDefs } from '../../src/schema/codegen/types'
+import generateQueryTypeDefs from './generateQueryTypeDefs'
 
 let queryTypes = [
   {

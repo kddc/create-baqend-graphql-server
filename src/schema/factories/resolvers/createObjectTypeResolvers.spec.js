@@ -1,4 +1,4 @@
-import { createObjectTypeResolvers } from '../../src/schema/factories/resolvers'
+import createObjectTypeResolvers from './createObjectTypeResolvers'
 
 // input
 let objectTypes = [
