@@ -11,14 +11,14 @@ const queryTypeTemplates = [
   }
 ]
 
-const createQueryTypes = (types) => {
+const createQueryTypes = (objectTypes) => {
   let queryTypes = []
-  types.forEach((type) => {
+  objectTypes.forEach((objectType) => {
     queryTypeTemplates.forEach((queryTypeTemplate) => {
       queryTypes.push({
-        name: queryTypeTemplate.createName(type.name),
+        name: queryTypeTemplate.createName(objectType.name),
         args: queryTypeTemplate.args,
-        type: type.name,
+        type: objectType.name,
         superType: queryTypeTemplate.superType
       })
     })

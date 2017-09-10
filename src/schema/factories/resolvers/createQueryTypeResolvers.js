@@ -1,18 +1,13 @@
 import { codeBlock } from 'common-tags'
 
-const createResolverMethod = (referenceType, referenceSuperType) => {
-  let args = ['root', 'args', 'context']
+const createResolveArgs = (referenceType, referenceSuperType) => {
+  let callerArgs = ['root', 'args', 'context']
+  let resolverArgs = [`'${referenceType}'`, 'args', 'context']
   switch(referenceSuperType) {
     case "object":
-    return codeBlock`
-    (${args.join(', ')}) => {
-      return resolveObjectQuery('${referenceType}', args, context)
-    }`
+      return ['resolveObjectQuery', callerArgs, resolverArgs]
     case "collection":
-    return codeBlock`
-    (${args.join(', ')}) => {
-      return resolveCollectionQuery('${referenceType}', args, context)
-    }`
+      return ['resolveCollectionQuery', callerArgs, resolverArgs]
   }
 }
 
@@ -22,7 +17,7 @@ const createQueryTypeResolvers = (queryTypes) => {
       name: queryType.name,
       type: queryType.type,
       superType: queryType.superType,
-      resolve: createResolverMethod(queryType.type, queryType.superType)
+      resolve: createResolveArgs(queryType.type, queryType.superType)
     }
   })
 }

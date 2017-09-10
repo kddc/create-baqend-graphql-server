@@ -3,6 +3,8 @@ import SchemaReader from './readers/SchemaReader'
 import SchemaObjectFactory from './factories/SchemaObjectFactory'
 import SchemaGenerator from './codegen/SchemaGenerator'
 
+import applyTemplate from './templates/applyTemplate'
+
 class CreateSchema {
   constructor() {
     this.schemaReader = SchemaReader
@@ -10,6 +12,9 @@ class CreateSchema {
   }
 
   start(input) {
+    // let test = [ 'resolveObjectTypeReference', [ '{ author }', 'args', 'context' ], [ '\'User\'', 'author', 'args', 'context' ] ]
+    // let template = applyTemplate(...test)
+    // console.log(template)
     console.log("---------------------- Read Schema --------------------------")
     let schema = this.schemaReader.readSchema(input)
     console.log(util.inspect(schema, false, null))
