@@ -1,15 +1,7 @@
-export default class SchemaReader {
-
-  static readSchema(schemaString) {
-    let schema = this.parseSchema(schemaString)
-    return this.stripSchema(schema)
-  }
+export default class SchemaParser {
 
   static parseSchema(schemaString) {
-    return JSON.parse(schemaString)
-  }
-
-  static stripSchema(schema) {
+    let schema = JSON.parse(schemaString)
     return schema.map((type) => {
       return {
         "class": type["class"],
@@ -23,4 +15,5 @@ export default class SchemaReader {
       }
     })
   }
+
 }

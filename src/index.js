@@ -4,7 +4,8 @@ const inputPath = path.join(process.cwd(), './src/input/schema.json')
 const outputPath = path.join(process.cwd(), './src/output/schema.js')
 
 import IOService from './services/IOService'
-import CreateSchema from './schema/CreateSchema'
+import Schema from './schema/Schema'
+// import CreateSchema from './schema/CreateSchema'
 
 const getInputSchema = (path) => {
   return IOService.readFile(path).then((schema) => {
@@ -23,8 +24,12 @@ const writeGraphqlSchema = (data, path) => {
 }
 
 const start = async () => {
-  const schemaString = await getInputSchema(inputPath)
-  CreateSchema.start(schemaString)
+  const inputSchema = await getInputSchema(inputPath)
+  const parsedSchema = new Schema(inputSchema)
+
+  console.log(parsedSchema.getTypeDefs())
+  console.log(parsedSchema.getResolverDefs())
+  // CreateSchema.start(schemaString)
   // const schema = prepareSchema(schemaString)
   //
   // console.log("-----------------------------------------------------------------------")
