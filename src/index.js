@@ -29,27 +29,6 @@ const start = async () => {
 
   console.log(parsedSchema.getTypeDefs())
   console.log(parsedSchema.getResolverDefs())
-  // CreateSchema.start(schemaString)
-  // const schema = prepareSchema(schemaString)
-  //
-  // console.log("-----------------------------------------------------------------------")
-  // console.log(util.inspect(schema, false, null))
-  // console.log("-----------------------------------------------------------------------")
-  //
-  // const baqendGraphQLSchema = new BaqendGraphQLSchema(schema)
-  // console.log("-----------------------------------------------------------------------")
-  // console.log(util.inspect(baqendGraphQLSchema.get(), false, null))
-  // console.log("-----------------------------------------------------------------------")
-  //
-  // const baqendGraphQLResolvers = new BaqendGraphQLResolvers(baqendGraphQLSchema)
-  // console.log("-----------------------------------------------------------------------")
-  // console.log(util.inspect(baqendGraphQLResolvers.get(), false, null))
-  // console.log("-----------------------------------------------------------------------")
-  //
-  // const baqendGraphQLServerGenerator = new BaqendGraphQLServerGenerator(baqendGraphQLSchema, baqendGraphQLResolvers)
-  //
-  // const typeDefs = createTypeDefsFromSchema(schema)
-  // writeTypeDefinitions(typeDefs, typeDefsPath)
 }
 
 start()

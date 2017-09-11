@@ -7,7 +7,6 @@ import QueryTypes from './QueryTypes'
 
 export default class ObjectType {
   constructor(schemaObject) {
-    console.log(schemaObject)
     this.name = TypeParser.getType(schemaObject['class'])
     this.type = TypeParser.getType(schemaObject['class'])
     this.fields = schemaObject.fields.map((field) => new FieldType({
