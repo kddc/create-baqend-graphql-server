@@ -1,0 +1,453 @@
+[
+  {
+    "class": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "fields": {
+      "id": {
+        "name": "id",
+        "type": "/db/String",
+        "order": 0,
+        "flags": [
+          "METADATA"
+        ]
+      },
+      "version": {
+        "name": "version",
+        "type": "/db/Integer",
+        "order": 1,
+        "flags": [
+          "METADATA"
+        ]
+      },
+      "acl": {
+        "name": "acl",
+        "type": "/db/JsonObject",
+        "order": 2,
+        "flags": [
+          "METADATA"
+        ]
+      },
+      "createdAt": {
+        "name": "createdAt",
+        "type": "/db/DateTime",
+        "order": 3,
+        "flags": [
+          "READONLY"
+        ]
+      },
+      "updatedAt": {
+        "name": "updatedAt",
+        "type": "/db/DateTime",
+        "order": 4,
+        "flags": [
+          "READONLY"
+        ]
+      }
+    }
+  },
+  {
+    "class": "/db/Reference",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "fields": {
+      "text": {
+        "name": "text",
+        "type": "/db/String",
+        "order": 0
+      }
+    }
+  },
+  {
+    "class": "/db/Role",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "fields": {
+      "name": {
+        "name": "name",
+        "type": "/db/String",
+        "order": 0
+      },
+      "users": {
+        "name": "users",
+        "type": "/db/collection.Set[/db/User]",
+        "order": 1
+      }
+    }
+  },
+  {
+    "class": "/db/EmbeddedVote",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "embedded": true,
+    "fields": {}
+  },
+  {
+    "class": "/db/Post",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "metadata": {},
+    "fields": {
+      "title": {
+        "name": "title",
+        "type": "/db/String",
+        "order": 0
+      },
+      "author": {
+        "name": "author",
+        "type": "/db/User",
+        "order": 1
+      },
+      "created": {
+        "name": "created",
+        "type": "/db/DateTime",
+        "order": 2
+      },
+      "url": {
+        "name": "url",
+        "type": "/db/String",
+        "order": 3
+      },
+      "text": {
+        "name": "text",
+        "type": "/db/String",
+        "order": 4
+      },
+      "type": {
+        "name": "type",
+        "type": "/db/String",
+        "order": 5
+      },
+      "score": {
+        "name": "score",
+        "type": "/db/Integer",
+        "order": 6
+      },
+      "descendants": {
+        "name": "descendants",
+        "type": "/db/Integer",
+        "order": 7
+      },
+      "comments": {
+        "name": "comments",
+        "type": "/db/collection.List[/db/Comment]",
+        "order": 8
+      },
+      "picture": {
+        "name": "picture",
+        "type": "/db/String",
+        "order": 9
+      }
+    }
+  },
+  {
+    "class": "/db/Comment",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "metadata": {},
+    "fields": {
+      "author": {
+        "name": "author",
+        "type": "/db/User",
+        "order": 0
+      },
+      "text": {
+        "name": "text",
+        "type": "/db/String",
+        "order": 1
+      },
+      "created": {
+        "name": "created",
+        "type": "/db/DateTime",
+        "order": 2
+      },
+      "parent": {
+        "name": "parent",
+        "type": "/db/Comment",
+        "order": 3
+      },
+      "post": {
+        "name": "post",
+        "type": "/db/Post",
+        "order": 4
+      },
+      "comments": {
+        "name": "comments",
+        "type": "/db/collection.List[/db/Comment]",
+        "order": 5
+      }
+    }
+  },
+  {
+    "class": "/db/logs.AppLog",
+    "superClass": "/db/Object",
+    "acl": {
+      "load": {
+        "/db/Role/1": "allow"
+      },
+      "update": {
+        "*": "deny"
+      },
+      "delete": {
+        "*": "deny"
+      },
+      "query": {
+        "/db/Role/1": "allow"
+      },
+      "schemaAdd": {
+        "*": "deny"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "*": "deny"
+      }
+    },
+    "fields": {
+      "date": {
+        "name": "date",
+        "type": "/db/DateTime",
+        "order": 0
+      },
+      "message": {
+        "name": "message",
+        "type": "/db/String",
+        "order": 1
+      },
+      "level": {
+        "name": "level",
+        "type": "/db/String",
+        "order": 2
+      },
+      "data": {
+        "name": "data",
+        "type": "/db/JsonObject",
+        "order": 3
+      },
+      "user": {
+        "name": "user",
+        "type": "/db/User",
+        "order": 4
+      }
+    }
+  },
+  {
+    "class": "/db/logs.AccessLog",
+    "superClass": "/db/Object",
+    "acl": {
+      "load": {
+        "/db/Role/1": "allow"
+      },
+      "insert": {
+        "*": "deny"
+      },
+      "update": {
+        "*": "deny"
+      },
+      "delete": {
+        "*": "deny"
+      },
+      "query": {
+        "/db/Role/1": "allow"
+      },
+      "schemaAdd": {
+        "*": "deny"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "*": "deny"
+      }
+    },
+    "fields": {
+      "date": {
+        "name": "date",
+        "type": "/db/DateTime",
+        "order": 0
+      },
+      "ip": {
+        "name": "ip",
+        "type": "/db/String",
+        "order": 1
+      },
+      "method": {
+        "name": "method",
+        "type": "/db/String",
+        "order": 2
+      },
+      "server": {
+        "name": "server",
+        "type": "/db/String",
+        "order": 3
+      },
+      "url": {
+        "name": "url",
+        "type": "/db/String",
+        "order": 4
+      },
+      "status": {
+        "name": "status",
+        "type": "/db/Integer",
+        "order": 5
+      },
+      "download": {
+        "name": "download",
+        "type": "/db/Integer",
+        "order": 6
+      },
+      "upload": {
+        "name": "upload",
+        "type": "/db/Integer",
+        "order": 7
+      },
+      "latency": {
+        "name": "latency",
+        "type": "/db/Integer",
+        "order": 8
+      },
+      "cacheHit": {
+        "name": "cacheHit",
+        "type": "/db/Boolean",
+        "order": 9
+      }
+    }
+  },
+  {
+    "class": "/db/Device",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "fields": {
+      "deviceOs": {
+        "name": "deviceOs",
+        "type": "/db/String",
+        "order": 0
+      }
+    }
+  },
+  {
+    "class": "/db/User",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "metadata": {},
+    "fields": {
+      "username": {
+        "name": "username",
+        "type": "/db/String",
+        "order": 0,
+        "flags": [
+          "READONLY"
+        ]
+      },
+      "email": {
+        "name": "email",
+        "type": "/db/String",
+        "order": 1
+      },
+      "name": {
+        "name": "name",
+        "type": "/db/String",
+        "order": 2
+      },
+      "inactive": {
+        "name": "inactive",
+        "type": "/db/Boolean",
+        "order": 3,
+        "flags": [
+          "READONLY"
+        ]
+      },
+      "comments": {
+        "name": "comments",
+        "type": "/db/collection.List[/db/Comment]",
+        "order": 4
+      },
+      "posts": {
+        "name": "posts",
+        "type": "/db/collection.List[/db/Post]",
+        "order": 5
+      },
+      "reference": {
+        "name": "reference",
+        "type": "/db/Reference",
+        "order": 6
+      }
+    }
+  }
+]
