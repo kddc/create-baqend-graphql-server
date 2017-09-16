@@ -19,7 +19,7 @@
         height: 100vh;
       }
     </style>
-
+    <script src="https://www.baqend.com/js-sdk/latest/baqend.min.js"></script>
     <!--
       This GraphiQL example depends on Promise and fetch, which are available in
       modern browsers, but can be "polyfilled" for older browsers.
@@ -42,6 +42,11 @@
 
   </head>
   <body>
+    <div style="position: absolute;padding-left: 250px;margin-top: 14px;display: flex;">
+      <a href="https://proud-filet-mignon-324.app.baqend.com/v1/file/playground/index.html">Admin</a>&nbsp;|&nbsp;
+      <a href="https://proud-filet-mignon-324.app.baqend.com/v1/file/playground/user.html">User</a>&nbsp;|&nbsp;
+      <a href="https://proud-filet-mignon-324.app.baqend.com/v1/file/playground/anonymous.html">Anonymous</a>
+    </div>
     <div id="graphiql">Loading...</div>
     <script>
       /**
@@ -98,43 +103,66 @@
       // Defines a GraphQL fetcher using the fetch API. You're not required to
       // use fetch, and could instead implement graphQLFetcher however you like,
       // as long as it returns a Promise or Observable.
-      function graphQLFetcher(graphQLParams) {
-        // This example expects a GraphQL server at the path /graphql.
-        // Change this to point wherever you host your GraphQL server.
-        return fetch('/v1/code/graphql_server', {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(graphQLParams),
-          credentials: 'include',
-        }).then(function (response) {
-          return response.text();
-        }).then(function (responseBody) {
-          try {
-            return JSON.parse(responseBody);
-          } catch (error) {
-            return responseBody;
-          }
-        });
+
+      function startGraphiql(token) {
+        function graphQLFetcher(graphQLParams) {
+          // This example expects a GraphQL server at the path /graphql.
+          // Change this to point wherever you host your GraphQL server.
+          return fetch('/v1/code/graphql', {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'authorization': token
+            },
+            body: JSON.stringify(graphQLParams),
+            credentials: 'include',
+          }).then(function (response) {
+            return response.text();
+          }).then(function (responseBody) {
+            try {
+              return JSON.parse(responseBody);
+            } catch (error) {
+              return responseBody;
+            }
+          });
+        }
+        // Render <GraphiQL /> into the body.
+        // See the README in the top level of this module to learn more about
+        // how you can customize GraphiQL by providing different values or
+        // additional child elements.
+        ReactDOM.render(
+          React.createElement(GraphiQL, {
+            fetcher: graphQLFetcher,
+            query: parameters.query,
+            variables: parameters.variables,
+            operationName: parameters.operationName,
+            onEditQuery: onEditQuery,
+            onEditVariables: onEditVariables,
+            onEditOperationName: onEditOperationName
+          }),
+          document.getElementById('graphiql')
+        );
       }
-      // Render <GraphiQL /> into the body.
-      // See the README in the top level of this module to learn more about
-      // how you can customize GraphiQL by providing different values or
-      // additional child elements.
-      ReactDOM.render(
-        React.createElement(GraphiQL, {
-          fetcher: graphQLFetcher,
-          query: parameters.query,
-          variables: parameters.variables,
-          operationName: parameters.operationName,
-          onEditQuery: onEditQuery,
-          onEditVariables: onEditVariables,
-          onEditOperationName: onEditOperationName
-        }),
-        document.getElementById('graphiql')
-      );
+
+      DB.connect("proud-filet-mignon-324", function() {
+        console.log(DB.token, DB.me)
+        if(DB.token) {
+          DB.User.logout().then(function() {
+            DB.User.login('admin', 'temogu45').then(function() {
+              console.log(DB.token, DB.me)
+              var token = "BAT " + DB.token
+              startGraphiql(token)
+            })
+          })
+        } else {
+          DB.User.login('admin', 'temogu45').then(function() {
+            console.log(DB.token, DB.me)
+            var token = "BAT " + DB.token
+            startGraphiql(token)
+          })
+        }
+      });
     </script>
   </body>
 </html>
