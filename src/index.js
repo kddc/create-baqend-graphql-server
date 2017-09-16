@@ -1,34 +1,47 @@
+import { codeBlock } from 'common-tags'
 import util from 'util'
 import path from 'path'
-const inputPath = path.join(process.cwd(), './src/input/schema.json')
-const outputPath = path.join(process.cwd(), './src/output/schema.js')
+
+const jsonPath = path.join(process.cwd(), './test/schema.json')
+const typeDefsPath = path.join(process.cwd(), './playground/schema/generated/typeDefs.js')
+const resolversPath = path.join(process.cwd(), './playground/schema/generated/resolvers.js')
 
 import IOService from './services/IOService'
 import Schema from './schema/Schema'
-// import CreateSchema from './schema/CreateSchema'
-
-const getInputSchema = (path) => {
-  return IOService.readFile(path).then((schema) => {
-    return schema
-  }, (err) => {
-    throw err
-  })
-}
-
-const writeGraphqlSchema = (data, path) => {
-  return IOService.writeFile(data, path).then(() => {
-    console.log("TypeDefinitions saved succesfully")
-  }, (err) => {
-    console.log("Could not save TypeDefinitions")
-  })
-}
+import Bundler from './codegen/Bundler'
 
 const start = async () => {
-  const inputSchema = await getInputSchema(inputPath)
-  const parsedSchema = new Schema(inputSchema)
+  let json = await IOService.readFile(jsonPath)
+  let schema = new Schema(json)
 
-  console.log(parsedSchema.getTypeDefs())
-  console.log(parsedSchema.getResolverDefs())
+  let typeDefs = schema.getTypeDefs()
+  let resolverDefs = schema.getResolverDefs()
+
+  typeDefs = codeBlock`
+    let typeDefs = \`
+      ${typeDefs.join('\n')}
+    \`
+    export default typeDefs
+  `
+
+  resolverDefs = codeBlock`
+    let resolvers = {
+      ${resolverDefs.join(',\n')}
+    }
+    export default resolvers
+  `
+
+  IOService.writeFile(typeDefs, typeDefsPath)
+  IOService.writeFile(resolverDefs, resolversPath)
 }
+
+// const start = async () => {
+//   const json = await getInputSchema(jsonPath)
+//   const schema = new Schema(json)
+//   const bundler = new Bundler(schema)
+//   console.log(parsedSchema.getTypeDefs())
+//   console.log(parsedSchema.getResolverDefs())
+// }
+
 
 start()
