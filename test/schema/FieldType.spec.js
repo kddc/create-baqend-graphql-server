@@ -28,7 +28,7 @@ describe('Create Scalar FieldType', () => {
   test('returns proper Resolver', () => {
     let resolverDef = fieldType.getResolverDef()
     let expectedResolverDef = codeBlock`
-      someString: ({ someString }, args, context) => {
+      someString: ({ someString }, args, { baqendResolver }) => {
         return someString
       }
     `
@@ -63,8 +63,8 @@ describe('Create Object FieldType', () => {
   test('returns proper Resolver', () => {
     let resolverDef = fieldType.getResolverDef()
     let expectedResolverDef = codeBlock`
-      someReference: ({ someReference }, args, context) => {
-        return resolveObjectTypeReference('ReferenceClass', someReference, args, context)
+      someReference: ({ someReference }, args, { baqendResolver }) => {
+        return baqendResolver.resolveReference('ReferenceClass', someReference, args, {})
       }
     `
     expect(resolverDef).toEqual(expectedResolverDef)
@@ -98,8 +98,8 @@ describe('Create Collection FieldType', () => {
   test('returns proper Resolver', () => {
     let resolverDef = fieldType.getResolverDef()
     let expectedResolverDef = codeBlock`
-      referenceCollection: ({ referenceCollection }, args, context) => {
-        return resolveObjectTypeReferenceCollection('ReferenceClass', referenceCollection, args, context)
+      referenceCollection: ({ referenceCollection }, args, { baqendResolver }) => {
+        return baqendResolver.resolveReferenceCollection('ReferenceClass', referenceCollection, args, {})
       }
     `
     expect(resolverDef).toEqual(expectedResolverDef)

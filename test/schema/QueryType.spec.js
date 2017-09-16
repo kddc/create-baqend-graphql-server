@@ -35,8 +35,8 @@ describe('Create Object QueryType', () => {
   test('returns proper Resolver', () => {
     let resolverDef = queryType.getResolverDef()
     let expectedResolverDef = codeBlock`
-      TestObject: (root, args, context) => {
-        return resolveObjectQuery('TestObject', args, context))
+      TestObject: (root, args, { baqendResolver }) => {
+        return baqendResolver.resolveReferenceQuery('TestObject', args, {})
       }
     `
     expect(resolverDef).toEqual(expectedResolverDef)
@@ -78,8 +78,8 @@ describe('Create Collection QueryType', () => {
   test('returns proper Resolver', () => {
     let resolverDef = queryType.getResolverDef()
     let expectedResolverDef = codeBlock`
-      allTestObjects: (root, args, context) => {
-        return resolveCollectionQuery('TestObject', args, context))
+      allTestObjects: (root, args, { baqendResolver }) => {
+        return baqendResolver.resolveCollectionQuery('TestObject', args, {})
       }
     `
     expect(resolverDef).toEqual(expectedResolverDef)
