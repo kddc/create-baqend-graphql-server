@@ -26,16 +26,16 @@ export default class FieldType {
   }
 
   getArgs() {
-    return [`{ ${this.name} }`, 'args', 'context'].join(', ')
+    return [`{ ${this.name} }`, 'args', '{ baqendResolver }'].join(', ')
   }
 
   getResolveStrategy() {
-    let args = [`'${this.type}'`, this.name, 'args', 'context']
+    let args = [`'${this.type}'`, this.name, 'args', '{}']
     switch(this.superType) {
       case 'object':
-        return `resolveObjectTypeReference(${args.join(', ')})`
+        return `baqendResolver.resolveReference(${args.join(', ')})`
       case 'collection':
-        return `resolveObjectTypeReferenceCollection(${args.join(', ')})`
+        return `baqendResolver.resolveReferenceCollection(${args.join(', ')})`
       case 'scalar':
         return this.name
     }

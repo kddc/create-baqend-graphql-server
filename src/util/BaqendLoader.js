@@ -1,0 +1,4 @@
+class BaqendLoader {
+  constructor(db) {
+  }
+}

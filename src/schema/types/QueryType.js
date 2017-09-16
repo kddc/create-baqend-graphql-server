@@ -19,23 +19,23 @@ export default class QueryType {
     let resolveStrategy = this.getResolveStrategy()
     return codeBlock`
       ${this.name}: (${args}) => {
-        return ${resolveStrategy})
+        return ${resolveStrategy}
       }
     `
   }
 
   getArgs() {
-    let callerArgs = ['root', 'args', 'context']
+    let callerArgs = ['root', 'args', '{ baqendResolver }']
     return callerArgs.join(', ')
   }
 
   getResolveStrategy() {
-    let args = [`'${this.type}'`, 'args', 'context']
+    let args = [`'${this.type}'`, 'args', '{}']
     switch(this.superType) {
       case 'object':
-        return `resolveObjectQuery(${args.join(', ')})`
+        return `baqendResolver.resolveReferenceQuery(${args.join(', ')})`
       case 'collection':
-        return `resolveCollectionQuery(${args.join(', ')})`
+        return `baqendResolver.resolveCollectionQuery(${args.join(', ')})`
     }
   }
 

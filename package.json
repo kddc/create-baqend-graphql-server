@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/index.js",
+    "bundle": "babel-node src/bundle.js",
     "test": "jest --verbose"
   },
   "keywords": [],

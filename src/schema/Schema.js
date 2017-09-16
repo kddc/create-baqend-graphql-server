@@ -2,7 +2,7 @@ import { codeBlock } from 'common-tags'
 
 import SchemaParser from './parsers/SchemaParser'
 import ObjectType from './types/ObjectType'
-import flatten from './utils/flatten'
+import flatten from '../util/flatten'
 
 export default class SchemaTypes {
   constructor(schema) {
@@ -15,23 +15,19 @@ export default class SchemaTypes {
   getTypeDefs() {
     let objectTypeDefs = this.getObjectTypeDefs()
     let queryTypeDefs = this.getQueryTypeDefs()
-    return codeBlock`
-      const types = \`
-        ${objectTypeDefs}
-        ${queryTypeDefs}
-      \`
-    `
+    return [
+      objectTypeDefs,
+      queryTypeDefs
+    ]
   }
 
   getResolverDefs() {
     let objectTypeResolverDefs = this.getObjectResolverDefs()
     let queryTypeResolverDefs = this.getQueryTypeResolverDefs()
-    return codeBlock`
-      const resolvers = {
-        ${objectTypeResolverDefs},
-        ${queryTypeResolverDefs}
-      }
-    `
+    return [
+      objectTypeResolverDefs,
+      queryTypeResolverDefs
+    ]
   }
 
   getObjectTypeDefs() {
