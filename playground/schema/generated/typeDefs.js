@@ -15,5 +15,9 @@ let typeDefs = `
     User: User
     allUsers: [User]
   }
+  type Subscription {
+    somethingChanged: Post
+    somethingChanged2: [Post]
+  }
 `
 export default typeDefs

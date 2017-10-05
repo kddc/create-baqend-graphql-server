@@ -1,3 +1,11 @@
+import { PubSub, withFilter } from 'graphql-subscriptions';
+const pubsub = new PubSub();
+
+// setInterval(() => {
+//   console.log('something_changed')
+//   pubsub.publish('something_changed', { somethingChanged: { id: "123" }});
+// }, 10000);
+
 let resolvers = {
   Post: {
     author: ({ author }, args, { baqendResolver }) => {
@@ -21,6 +29,26 @@ let resolvers = {
     },
     allUsers: (root, args, { baqendResolver }) => {
       return baqendResolver.resolveCollectionQuery('User', args, {})
+    }
+  },
+  Subscription: {
+    somethingChanged: {
+      subscribe: withFilter(() => pubsub.asyncIterator('something_changed'), (payload, variables) => {
+        console.log(payload)
+        return true
+      }),
+    },
+    somethingChanged2: {
+      resolve: ({ somethingChanged }, args, { baqendResolver }, info) => {
+        // console.log(args, baqendResolver)
+        return somethingChanged;
+      },
+      subscribe: (payload, variables, { db }, info) => {
+        db.Post.find().resultStream().subscribe((items) => {
+          pubsub.publish('something_changed', { somethingChanged: items});
+        })
+        return pubsub.asyncIterator('something_changed')
+      }
     }
   }
 }
