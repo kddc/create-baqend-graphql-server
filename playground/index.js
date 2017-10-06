@@ -41,3 +41,66 @@ const start = async () => {
 }
 
 start()
+
+// var test = {
+//   and : [
+//     {
+//       or : [
+//         {
+//           price : {
+//             eq: 0.99,
+//             lt: 0.99
+//           },
+//           name: {
+//             eq: "bla"
+//           }
+//         },
+//         {
+//           price : {
+//             eq: 1.99
+//           }
+//         }
+//       ]
+//     },
+//     {
+//       or : [
+//         {
+//           sale : {
+//             eq: true
+//           }
+//         },
+//         {
+//           qty : {
+//             lt : 20
+//           }
+//         }
+//       ]
+//     }
+//   ]
+// }
+//
+// // console.log(test)
+// import util from 'util'
+//
+// const parseFilter = (filterObject, isPropertyLevel = true) => {
+//   const isLogicalLevel = Object.keys(filterObject).filter(property => property.match(/(and|or)/)).length ? true : false
+//   isPropertyLevel = isLogicalLevel ? false : isPropertyLevel
+//   if(isLogicalLevel) {
+//     Object.keys(filterObject).map(function(key) {
+//       filterObject[`$${key}`] = filterObject[key].map(filterObject => parseFilter(filterObject, true));
+//       delete filterObject[key]
+//     })
+//   } else if (isPropertyLevel) {
+//     Object.keys(filterObject).map(function(key) {
+//       filterObject[key] = parseFilter(filterObject[key], false)
+//     })
+//   } else {
+//     Object.keys(filterObject).map(function(key) {
+//       filterObject[`$${key}`] = filterObject[key]
+//       delete filterObject[key]
+//     })
+//   }
+//   return filterObject
+// }
+//
+// console.log(JSON.stringify(parseFilter(test), null, 4));

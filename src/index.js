@@ -31,8 +31,10 @@ const start = async () => {
     export default resolvers
   `
 
-  IOService.writeFile(typeDefs, typeDefsPath)
-  IOService.writeFile(resolverDefs, resolversPath)
+  // IOService.writeFile(typeDefs, typeDefsPath)
+  // IOService.writeFile(resolverDefs, resolversPath)
+  console.log(typeDefs)
+  console.log(resolverDefs)
 }
 
 // const start = async () => {
