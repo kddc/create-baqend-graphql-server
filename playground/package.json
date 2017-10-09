@@ -21,5 +21,8 @@
     "graphql-relay-tools": "^0.1.0",
     "graphql-server-express": "^1.1.2",
     "graphql-tools": "^1.2.2"
+  },
+  "dependencies": {
+    "dataloader": "^1.3.0"
   }
 }

@@ -9,6 +9,10 @@ const pageInfoType = codeBlock`
   }
 `
 
-export {
+const connectionTypes = [
   pageInfoType
+]
+
+export {
+  connectionTypes
 }

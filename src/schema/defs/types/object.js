@@ -25,6 +25,7 @@ const relayObjectDefinitions = ({ name, type, fields }) => {
   const connectionDef = codeBlock`
     type ${name}Connection {
       edges: [${name}Edge]
+      total: Int
       pageInfo: PageInfo!
     }
   `

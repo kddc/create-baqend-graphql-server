@@ -1,4 +1,4 @@
-import { codeBlock } from 'common-tags'
+import { stripIndent, codeBlock } from 'common-tags'
 import path from 'path'
 
 import IOService from '../services/IOService'
@@ -12,19 +12,35 @@ export default class Bundler {
     console.log(filename)
     console.log(path.join(process.cwd(), './src/util/BaqendResolver.js'))
 
+    // let parseFilterInput = await IOService.readFile(path.join(process.cwd(), './src/util/parseFilterInput.js'))
+    // let parseSortByInput = await IOService.readFile(path.join(process.cwd(), './src/util/parseSortByInput.js'))
     let baqendResolver = await IOService.readFile(path.join(process.cwd(), './src/util/BaqendResolver.js'))
+    // parseFilterInput,
+    // parseSortByInput,
+
+    let imports = [
+      baqendResolver
+    ]
+
     let typeDefs = this.schema.getTypeDefs()
     let resolverDefs = this.schema.getResolverDefs()
 
     let content = codeBlock`
       let { graphql } = require('graphql');
       let { makeExecutableSchema } = require('graphql-tools');
-      ${baqendResolver.replace('export default ', '')}
+      ${imports.join('\n')}
       let typeDefs = \`
-        ${typeDefs.join('\n')}
+        ${typeDefs.defs.join('\n')}
+        type Query {
+          ${typeDefs.queryDefs.join('\n')}
+        }
       \`
+
       let resolvers = {
-        ${resolverDefs.join(',\n')}
+        ${resolverDefs.resolvers.join(',\n')},
+        Query: {
+          ${resolverDefs.queryResolvers.join(',\n')}
+        }
       }
 
       let schema = makeExecutableSchema({
@@ -43,8 +59,8 @@ export default class Bundler {
         });
       };
     `
-    console.log(content)
-    return await IOService.writeFile(content, filename)
+    console.log(baqendResolver.replace(/^(import|export).*\n/gm, ''))
+    // return await IOService.writeFile(content, filename)
   }
 
 }

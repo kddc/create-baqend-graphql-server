@@ -1,8 +1,13 @@
 import { codeBlock } from 'common-tags'
+import flatten from '../util/flatten'
 
 import SchemaParser from './parsers/SchemaParser'
-import ObjectType from './types/ObjectType'
-import flatten from '../util/flatten'
+import ObjectType from './ObjectType'
+
+import { nodeTypes, nodeFields } from  './defs/types/relay/node'
+import { connectionTypes } from  './defs/types/relay/connections'
+import { filterTypes } from  './defs/types/filter'
+import { loaderDefinitions } from './defs/loaders/loaders'
 
 export default class SchemaTypes {
   constructor(schema) {
@@ -13,94 +18,104 @@ export default class SchemaTypes {
     })
   }
 
-  getTypeDefs() {
-    // let objectTypeDefs = this.getObjectTypeDefs()
-    // let queryTypeDefs = this.getQueryTypeDefs()
-    // return [
-    //   objectTypeDefs,
-    //   queryTypeDefs
-    // ]
-    const typeDefs = flatten(this.types.map(type => {
-      return type.typeDefs(this.opts)
+  getLoaderDefs() {
+    const loaders = flatten(this.types.map(type => {
+      return type.loader(this.opts)
     }))
-    console.log(typeDefs)
+    return { loaders }
+  }
 
-    const queryDefs = flatten(this.types.map(type => {
-      return type.queryDefs(this.opts)
-    }))
-    console.log(queryDefs)
-    return []
+  getTypeDefs() {
+    const typeDefs = this.types.map(type => {
+      return type.typeDefs(this.opts)
+    })
+
+    const filterDefs = [
+      filterTypes,
+      this.types.map(type => {
+        return type.filterDefs(this.opts)
+      })
+    ]
+
+    const defs = flatten([
+      this.opts.api === 'relay' && nodeTypes || null,
+      this.opts.api === 'relay' && connectionTypes || null,
+      typeDefs,
+      filterDefs
+    ])
+
+    const queryDefs = flatten([
+      this.opts.api === 'relay' && nodeFields || null,
+      this.types.map(type => {
+        return type.queryDefs(this.opts)
+      })
+    ])
+
+    return { defs, queryDefs }
   }
 
   getResolverDefs() {
-    // let objectTypeResolverDefs = this.getObjectResolverDefs()
-    // let queryTypeResolverDefs = this.getQueryTypeResolverDefs()
-    // return [
-    //   objectTypeResolverDefs,
-    //   queryTypeResolverDefs
-    // ]
-    const typeResolvers = flatten(this.types.map(type => {
+    const resolvers = flatten(this.types.map(type => {
       return type.typeResolvers(this.opts)
     }))
-    console.log(typeResolvers)
 
     const queryResolvers = flatten(this.types.map(type => {
       return type.queryResolvers(this.opts)
     }))
-    console.log(queryResolvers)
-    return []
+
+    return { resolvers, queryResolvers }
   }
 
-  getObjectTypeDefs() {
-    let objectTypeDefs = flatten(this.types.map((objectType) => {
-      return objectType.defs(this.opts)
-    }))
-    return codeBlock`
-      ${objectTypeDefs.map(typeDef => {
-        return typeDef
-      }).join('\n')}
-    `
-  }
-
-  getQueryTypeDefs() {
-    let queryTypeDefs = flatten(this.types.map((objectType) => {
-      return objectType.getQueryTypeDefs().map((queryTypeDef) => {
-        return queryTypeDef
-      })
-    }))
-    return codeBlock`
-      type Query {
-        ${queryTypeDefs.map(queryTypeDef => {
-          return queryTypeDef
-        }).join('\n')}
-      }
-    `
-  }
-
-  getObjectResolverDefs() {
-    let objectResolverDefs = flatten(this.types.map((objectType) => {
-      return objectType.resolvers(this.opts)
-    }))
-    return codeBlock`
-      ${objectResolverDefs.map(resolverDef => {
-        return resolverDef
-      }).join(',\n')}
-    `
-  }
-
-  getQueryTypeResolverDefs() {
-    let queryTypeResolverDefs = flatten(this.types.map((objectType) => {
-      return objectType.getQueryTypeResolverDefs().map((queryTypeResolverDef) => {
-        return queryTypeResolverDef
-      })
-    }))
-    return codeBlock`
-      Query: {
-        ${queryTypeResolverDefs.map(queryTypeResolverDef => {
-          return queryTypeResolverDef
-        }).join(',\n')}
-      }
-    `
-  }
+  // getObjectTypeDefs() {
+  //   let objectTypeDefs = flatten(this.types.map((objectType) => {
+  //     return objectType.defs(this.opts)
+  //   }))
+  //   return codeBlock`
+  //     ${objectTypeDefs.map(typeDef => {
+  //       return typeDef
+  //     }).join('\n')}
+  //   `
+  // }
+  //
+  // getQueryTypeDefs() {
+  //   let queryTypeDefs = flatten(this.types.map((objectType) => {
+  //     return objectType.getQueryTypeDefs().map((queryTypeDef) => {
+  //       return queryTypeDef
+  //     })
+  //   }))
+  //   return codeBlock`
+  //     type Query {
+  //       ${queryTypeDefs.map(queryTypeDef => {
+  //         return queryTypeDef
+  //       }).join('\n')}
+  //     }
+  //   `
+  // }
+  //
+  // getObjectResolverDefs() {
+  //   let objectResolverDefs = flatten(this.types.map((objectType) => {
+  //     return objectType.resolvers(this.opts)
+  //   }))
+  //   return codeBlock`
+  //     ${objectResolverDefs.map(resolverDef => {
+  //       return resolverDef
+  //     }).join(',\n')}
+  //   `
+  // }
+  //
+  // getQueryTypeResolverDefs() {
+  //   let queryTypeResolverDefs = flatten(this.types.map((objectType) => {
+  //     return objectType.getQueryTypeResolverDefs().map((queryTypeResolverDef) => {
+  //       return queryTypeResolverDef
+  //     })
+  //   }))
+  //   return codeBlock`
+  //     Query: {
+  //       ${queryTypeResolverDefs.map(queryTypeResolverDef => {
+  //         return queryTypeResolverDef
+  //       }).join(',\n')}
+  //     }
+  //   `
+  // }
 
 }

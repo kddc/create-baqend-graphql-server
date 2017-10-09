@@ -17,7 +17,7 @@ const fieldDefinitions = (opts, args) => {
 const simpleFieldDefinitions = ({ name, type, superType }) => {
   if(superType === 'collection') {
     return codeBlock`
-      ${name}(${connectionArgs}): [${type}]
+      ${name}(filter: ${type}Filter, sortBy: ${type}SortBy, ${connectionArgs}): [${type}]
     `
   } else {
     return codeBlock`
@@ -29,11 +29,11 @@ const simpleFieldDefinitions = ({ name, type, superType }) => {
 const relayFieldDefinitions = ({ name, type, superType }) => {
   if(superType === 'collection') {
     return codeBlock`
-      ${name}(${connectionArgs}): ${type}Connection
+      ${name}(filter: ${type}Filter, sortBy: ${type}SortBy, ${connectionArgs}): ${type}Connection
     `
   } else {
     return codeBlock`
-      ${name}: ${type}
+      ${name}: ${type}!
     `
   }
 }

@@ -3,47 +3,34 @@ import util from 'util'
 import path from 'path'
 
 const jsonPath = path.join(process.cwd(), './test/schema.json')
-const typeDefsPath = path.join(process.cwd(), './playground/schema/generated/typeDefs.js')
+
+const loaderPath = path.join(process.cwd(), './playground/schema/generated/loader.js')
+const typesPath = path.join(process.cwd(), './playground/schema/generated/typeDefs.js')
 const resolversPath = path.join(process.cwd(), './playground/schema/generated/resolvers.js')
 
 import IOService from './services/IOService'
 import Schema from './schema/Schema'
 import Bundler from './codegen/Bundler'
 
+import { generateLoader } from './codegen/loader'
+import { generateResolvers } from './codegen/resolvers'
+import { generateTypes } from './codegen/types'
+
 const start = async () => {
   let json = await IOService.readFile(jsonPath)
   let schema = new Schema(json)
 
+  let loaderDefs = schema.getLoaderDefs()
   let typeDefs = schema.getTypeDefs()
   let resolverDefs = schema.getResolverDefs()
 
-  typeDefs = codeBlock`
-    let typeDefs = \`
-      ${typeDefs.join('\n')}
-    \`
-    export default typeDefs
-  `
+  let loader = generateLoader({}, loaderDefs)
+  let types = generateTypes({}, typeDefs)
+  let resolvers = generateResolvers({}, resolverDefs)
 
-  resolverDefs = codeBlock`
-    let resolvers = {
-      ${resolverDefs.join(',\n')}
-    }
-    export default resolvers
-  `
-
-  // IOService.writeFile(typeDefs, typeDefsPath)
-  // IOService.writeFile(resolverDefs, resolversPath)
-  console.log(typeDefs)
-  console.log(resolverDefs)
+  IOService.writeFile(loader, loaderPath)
+  IOService.writeFile(types, typesPath)
+  IOService.writeFile(resolvers, resolversPath)
 }
-
-// const start = async () => {
-//   const json = await getInputSchema(jsonPath)
-//   const schema = new Schema(json)
-//   const bundler = new Bundler(schema)
-//   console.log(parsedSchema.getTypeDefs())
-//   console.log(parsedSchema.getResolverDefs())
-// }
-
 
 start()

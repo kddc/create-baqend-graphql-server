@@ -34,10 +34,10 @@ const relayObjectResolvers = ({ name, fields }) => {
   `
   const edgeDef = codeBlock`
     ${name}Edge: {
-      cursor: (edge, args, { baqendResolver }) => {
-        return edge.id
+      cursor: ({ cursor }, args, { baqendResolver }) => {
+        return cursor
       },
-      node: (edge, args, { baqendResolver }) => {
+      node: ({ edge }, args, { baqendResolver }) => {
         return edge
       }
     }

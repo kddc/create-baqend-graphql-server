@@ -14,8 +14,16 @@ const nodesField = codeBlock`
   nodes(ids: [ID!]!): [Node]!
 `
 
-export {
-  nodeInterface,
+const nodeTypes = [
+  nodeInterface
+]
+
+const nodeFields = [
   nodeField,
   nodesField
+]
+
+export {
+  nodeTypes,
+  nodeFields
 }

@@ -1,13 +1,16 @@
 import { codeBlock } from 'common-tags'
 
 import Field from './Field'
-import TypeParser from '../parsers/TypeParser'
+import TypeParser from './parsers/TypeParser'
 
-import { objectDefinitions } from '../defs/types/object'
-import { queryDefinitions } from '../defs/types/query'
+import { loaderDefinitions } from './defs/loaders/loaders'
 
-import { objectResolvers } from '../defs/resolvers/object'
-import { queryResolvers } from '../defs/resolvers/query'
+import { objectDefinitions } from './defs/types/object'
+import { filterDefinitions } from './defs/types/filter'
+import { queryDefinitions } from './defs/types/query'
+
+import { objectResolvers } from './defs/resolvers/object'
+import { queryResolvers } from './defs/resolvers/query'
 
 
 export default class ObjectType {
@@ -18,6 +21,11 @@ export default class ObjectType {
       name: field.name,
       type: field.type
     }))
+  }
+
+  loader(opts) {
+    const name = this.name
+    return loaderDefinitions(opts, { name })
   }
 
   typeDefs(opts) {
@@ -35,6 +43,13 @@ export default class ObjectType {
       .filter(field => !field.isScalar())
       .map(field => field.resolvers(opts))
     return objectResolvers(opts, { name, type, fields })
+  }
+
+  filterDefs(opts) {
+    const name = this.name
+    const type = this.type
+    const fields = this.fields
+    return filterDefinitions(opts, { name, type, fields })
   }
 
   queryDefs(opts) {

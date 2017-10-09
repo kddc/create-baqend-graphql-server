@@ -3,9 +3,9 @@ import { codeBlock } from 'common-tags'
 const getResolveStrategy = ({ name, type, superType }) => {
   switch(superType) {
     case 'object':
-      return `baqendResolver.resolveReference('${type}', ${name}, 'args', '{}')`
+      return `baqendResolver.resolveReference('${type}', ${name}, args)`
     case 'collection':
-      return `baqendResolver.resolveReferenceCollection('${type}', ${name}, 'args', '{}')`
+      return `baqendResolver.resolveReferenceCollection('${type}', ${name}, args)`
     case 'scalar':
       return name
   }

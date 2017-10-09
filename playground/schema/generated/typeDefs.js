@@ -2,33 +2,42 @@ let typeDefs = `
   interface Node {
     id: ID!
   }
-
   type PageInfo {
     endCursor: String
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!
     startCursor: String
   }
-
-  input UserFilter {
-    or: [UserFilter!]
-    and: [UserFilter!]
-    username: StringFilter
-    id: StringFilter
+  type Post implements Node {
+    id: ID!
+    title: String!
+    author: User!
   }
-
-  input UserSortBy {
-    id: Direction
-    username: Direction
+  type PostConnection {
+    edges: [PostEdge]
+    total: Int
+    pageInfo: PageInfo!
   }
-
-  enum Direction {
-    ASC
-    DESC
+  type PostEdge {
+    cursor: String!
+    node: Post
   }
-
-  input StringFilter {
-  	eq: String
+  type User implements Node {
+    id: ID!
+    username: String!
+    posts(filter: PostFilter, sortBy: PostSortBy, first: Int, after: String, last: Int, before: String): PostConnection
+  }
+  type UserConnection {
+    edges: [UserEdge]
+    total: Int
+    pageInfo: PageInfo!
+  }
+  type UserEdge {
+    cursor: String!
+    node: User
+  }
+  input IDFilter {
+    eq: String
     ne: String
     in: [String!]
     nin: [String!]
@@ -39,43 +48,58 @@ let typeDefs = `
     lte: String
     regex: String
   }
-
-  type Post implements Node {
-    id: ID!
-    title: String
-    author: User
+  input StringFilter {
+    eq: String
+    ne: String
+    in: [String!]
+    nin: [String!]
+    exists: Boolean
+    gt: String
+    gte: String
+    lt: String
+    lte: String
+    regex: String
   }
-
-  type PostEdge {
-    cursor: String!
-    node: Post
+  input ObjectFilter {
+    eq: String
   }
-
-  type PostConnection {
-    edges: [PostEdge]
-    pageInfo: PageInfo!
+  input CollectionFilter {
+    eq: String
   }
-
-  type UserEdge {
-    cursor: String!
-    node: User
+  enum Direction {
+    ASC
+    DESC
   }
-
-  type UserConnection {
-    edges: [UserEdge]
-    pageInfo: PageInfo!
+  input PostFilter {
+    or: [UserFilter!]
+    and: [UserFilter!]
+    id: IDFilter
+    title: StringFilter
+    author: ObjectFilter
   }
-
-  type User implements Node {
-    id: ID!
-    username: String
-    posts(first: Int, after: String, last: Int, before: String): PostConnection
+  input PostSortBy {
+    id: Direction
+    title: Direction
+    author: Direction
   }
-
+  input UserFilter {
+    or: [UserFilter!]
+    and: [UserFilter!]
+    id: IDFilter
+    username: StringFilter
+    posts: CollectionFilter
+  }
+  input UserSortBy {
+    id: Direction
+    username: Direction
+    posts: Direction
+  }
   type Query {
-    Post: Post
-    allPosts(first: Int, after: String, last: Int, before: String): PostConnection
-    User: User
+    node(id: ID!): Node
+    nodes(ids: [ID!]!): [Node]!
+    Post(id: ID): Post
+    allPosts(filter: PostFilter, sortBy: PostSortBy, first: Int, after: String, last: Int, before: String): PostConnection
+    User(id: ID): User
     allUsers(filter: UserFilter, sortBy: UserSortBy, first: Int, after: String, last: Int, before: String): UserConnection
   }
 `

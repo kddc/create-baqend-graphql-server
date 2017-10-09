@@ -23,7 +23,7 @@ const simpleQueryDefinitions = ({ name, type }) => {
     ${type}(${objectQueryArgs}): ${type}
   `
   const connectionDef = codeBlock`
-    all${type}s(${connectionQueryArgs}): [${type}]
+    all${type}s(filter: ${type}Filter, sortBy: ${type}SortBy, ${connectionQueryArgs}): [${type}]
   `
   return [ objectDef, connectionDef ]
 }
@@ -33,7 +33,7 @@ const relayQueryDefinitions = ({ name, type }) => {
     ${type}(${objectQueryArgs}): ${type}
   `
   const connectionDef = codeBlock`
-    all${type}s(${connectionQueryArgs}): ${type}Connection
+    all${type}s(filter: ${type}Filter, sortBy: ${type}SortBy, ${connectionQueryArgs}): ${type}Connection
   `
   return [ objectDef, connectionDef ]
 }
