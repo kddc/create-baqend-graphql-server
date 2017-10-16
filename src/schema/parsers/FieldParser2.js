@@ -64,6 +64,7 @@ export default class FieldParser {
       return "ID"
     }
     switch(type.replace(new RegExp('\\[.*\\]', 'ig'), '')) {
+      case "GeoPoint":
       case "String":
         return "String"
       case "Integer":

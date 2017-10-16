@@ -1,13 +1,13 @@
 import { codeBlock } from 'common-tags'
+import fetch from 'node-fetch'
 import util from 'util'
 import path from 'path'
 
-const jsonPath = 'test/schema.json'
+// const jsonPath = 'test/schema.json'
 // const distPath = path.join(process.cwd(), './dist/graphql.js')
 
 import IOService from './services/IOServiceSync'
 import Schema from './schema/Schema'
-
 import { generateLoader } from './codegen/loader'
 import { generateResolvers } from './codegen/resolvers'
 import { generateTypes } from './codegen/types'
@@ -49,7 +49,11 @@ const start = async () => {
     IOService.copyFile('src/server/custom/resolvers.js', 'server/schema/custom/resolvers.js')
   }
 
-  const schema = new Schema(IOService.readFile(jsonPath))
+  const schemaJson = await fetch('https://proud-filet-mignon-324.app.baqend.com/v1/schema').then(res => res.text())
+  // console.log(schemaJson)
+  // const schemaJson2 = IOService.readFile(jsonPath)
+  // console.log(schemaJson2)
+  const schema = new Schema(schemaJson)
   let loader = generateLoader({}, schema.getLoaderDefs())
   let types = generateTypes({}, schema.getTypeDefs())
   let resolvers = generateResolvers({}, schema.getResolverDefs())

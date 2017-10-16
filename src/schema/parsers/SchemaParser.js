@@ -3,7 +3,12 @@ import FieldParser from './FieldParser2'
 export default class SchemaParser {
 
   static parseSchema(schemaString) {
-    const schema = JSON.parse(schemaString)
+    let schema = JSON.parse(schemaString)
+    schema = schema.filter(type => {
+      let isAdministrative = !type['class'].match(/(speedKit\.Asset|logs\.AppLog|logs\.AccessLog)/)
+      let isEmpty = !!Object.keys(type.fields).length
+      return isAdministrative && isEmpty
+    })
     let types
     types = this.parseTypes(schema)
     types = types.map(type => {
@@ -13,6 +18,8 @@ export default class SchemaParser {
         connections
       }
     })
+    // console.log('--------------------------------------------------------------------')
+    // console.log(types)
     return types
   }
 
@@ -26,12 +33,12 @@ export default class SchemaParser {
       embedded: []
     }
     schema.map(type => {
-      if(type['embedded']) {
-        types['embedded'].push(this.removePrefix(type['class']))
-      } else {
-        types['reference'].push(this.removePrefix(type['class']))
-      }
-    })
+        if(type['embedded']) {
+          types['embedded'].push(this.removePrefix(type['class']))
+        } else {
+          types['reference'].push(this.removePrefix(type['class']))
+        }
+      })
     return types
   }
 
