@@ -5,17 +5,18 @@ import SchemaParser from './parsers/SchemaParser'
 import ObjectType from './ObjectType'
 
 import { nodeTypes, nodeFields } from  './defs/types/relay/node'
-import { connectionTypes } from  './defs/types/relay/connections'
-import { filterTypes } from  './defs/types/filter'
+import { connectionTypes } from  './defs/types/connections'
+import { filterTypes } from  './defs/types/filters'
 import { loaderDefinitions } from './defs/loaders/loaders'
 
 export default class SchemaTypes {
   constructor(schema) {
-    this.opts = { api: 'relay' }
+    this.opts = { api: 'relay', log: true }
     this.schema = SchemaParser.parseSchema(schema)
     this.types = this.schema.map((schemaClass) => {
       return new ObjectType(schemaClass)
     })
+    // console.log(JSON.stringify(this.schema, null, 4))
   }
 
   getLoaderDefs() {
@@ -30,6 +31,10 @@ export default class SchemaTypes {
       return type.typeDefs(this.opts)
     })
 
+    const connectionDefs = this.types.map(type => {
+      return type.connectionDefs(this.opts)
+    })
+
     const filterDefs = [
       filterTypes,
       this.types.map(type => {
@@ -37,85 +42,71 @@ export default class SchemaTypes {
       })
     ]
 
+    const inputDefs = this.types.map(type => {
+      return type.inputDefs(this.opts)
+    })
+
+    const payloadDefs = this.types.map(type => {
+      return type.payloadDefs(this.opts)
+    })
+
     const defs = flatten([
-      this.opts.api === 'relay' && nodeTypes || null,
-      this.opts.api === 'relay' && connectionTypes || null,
+      this.opts.api === 'relay' && nodeTypes,
+      this.opts.api === 'relay' && connectionTypes,
       typeDefs,
-      filterDefs
+      connectionDefs,
+      filterDefs,
+      inputDefs,
+      payloadDefs
     ])
 
     const queryDefs = flatten([
-      this.opts.api === 'relay' && nodeFields || null,
+      this.opts.api === 'relay' && nodeFields,
       this.types.map(type => {
         return type.queryDefs(this.opts)
       })
     ])
 
-    return { defs, queryDefs }
+    const mutationDefs = flatten([
+      this.types.map(type => {
+        return type.mutationDefs(this.opts)
+      }),
+      this.types.map(type => {
+        return type.connectionMutationDefs(this.opts)
+      })
+    ])
+
+    return { defs, queryDefs, mutationDefs }
   }
 
   getResolverDefs() {
-    const resolvers = flatten(this.types.map(type => {
+    const objectResolvers = flatten(this.types.map(type => {
       return type.typeResolvers(this.opts)
     }))
+
+    const connectionResolvers = flatten(this.types.map(type => {
+      return type.connectionResolvers(this.opts)
+    }))
+
+    const payloadResolvers = flatten(this.types.map(type => {
+      return type.payloadResolvers(this.opts)
+    }))
+
+    const resolvers = flatten([
+      objectResolvers,
+      connectionResolvers,
+      payloadResolvers
+    ])
 
     const queryResolvers = flatten(this.types.map(type => {
       return type.queryResolvers(this.opts)
     }))
 
-    return { resolvers, queryResolvers }
-  }
+    const mutationResolvers = flatten(this.types.map(type => {
+      return type.mutationResolvers(this.opts)
+    }))
 
-  // getObjectTypeDefs() {
-  //   let objectTypeDefs = flatten(this.types.map((objectType) => {
-  //     return objectType.defs(this.opts)
-  //   }))
-  //   return codeBlock`
-  //     ${objectTypeDefs.map(typeDef => {
-  //       return typeDef
-  //     }).join('\n')}
-  //   `
-  // }
-  //
-  // getQueryTypeDefs() {
-  //   let queryTypeDefs = flatten(this.types.map((objectType) => {
-  //     return objectType.getQueryTypeDefs().map((queryTypeDef) => {
-  //       return queryTypeDef
-  //     })
-  //   }))
-  //   return codeBlock`
-  //     type Query {
-  //       ${queryTypeDefs.map(queryTypeDef => {
-  //         return queryTypeDef
-  //       }).join('\n')}
-  //     }
-  //   `
-  // }
-  //
-  // getObjectResolverDefs() {
-  //   let objectResolverDefs = flatten(this.types.map((objectType) => {
-  //     return objectType.resolvers(this.opts)
-  //   }))
-  //   return codeBlock`
-  //     ${objectResolverDefs.map(resolverDef => {
-  //       return resolverDef
-  //     }).join(',\n')}
-  //   `
-  // }
-  //
-  // getQueryTypeResolverDefs() {
-  //   let queryTypeResolverDefs = flatten(this.types.map((objectType) => {
-  //     return objectType.getQueryTypeResolverDefs().map((queryTypeResolverDef) => {
-  //       return queryTypeResolverDef
-  //     })
-  //   }))
-  //   return codeBlock`
-  //     Query: {
-  //       ${queryTypeResolverDefs.map(queryTypeResolverDef => {
-  //         return queryTypeResolverDef
-  //       }).join(',\n')}
-  //     }
-  //   `
-  // }
+    return { resolvers, queryResolvers, mutationResolvers }
+  }
 
 }

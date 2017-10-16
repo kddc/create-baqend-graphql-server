@@ -2,8 +2,8 @@ import { codeBlock } from 'common-tags'
 
 import FieldParser from './parsers/FieldParser'
 
-import { fieldDefinitions } from './defs/types/field'
-import { fieldResolvers } from './defs/resolvers/field'
+import { fieldDefinitions, fieldInputDefinitions } from './defs/types/fields'
+import { fieldResolvers } from './defs/resolvers/fields'
 
 /**
 * field name (posts, author, ...)
@@ -11,16 +11,20 @@ import { fieldResolvers } from './defs/resolvers/field'
 * field superType (collection, object, scalar)
 */
 export default class Field {
-  constructor({ name, type }) {
+  constructor({ name, fieldType, elementType }) {
     this.props = {
-      name: name,
-      type: name == 'id' ? "ID" : FieldParser.parseType(type).type,
-      superType: FieldParser.parseType(type).superType
+      name,
+      fieldType,
+      elementType
     }
   }
 
   isScalar() {
-    return !(this.props.superType === 'object' || this.props.superType === 'collection')
+    return this.props.fieldType === 'scalar'
+  }
+
+  isCollection() {
+    return this.props.fieldType === 'collection'
   }
 
   defs(opts) {
@@ -29,6 +33,10 @@ export default class Field {
 
   resolvers(opts) {
     return fieldResolvers(opts, this.props)
+  }
+
+  inputDefs(opts) {
+    return fieldInputDefinitions(opts, this.props)
   }
 
 }

@@ -16,26 +16,19 @@ const simpleObjectDefinitions = ({ name, fields }) => {
   return [ typeDef ]
 }
 
-const relayObjectDefinitions = ({ name, type, fields }) => {
-  const typeDef = codeBlock`
-    type ${name} implements Node {
+const relayObjectDefinitions = ({ name, type, abstract, parent, embedded, parentFields, fields }) => {
+  const schemaType = abstract ? 'interface' : 'type'
+  const typeDef = parentFields.length && codeBlock`
+    ${schemaType} ${name} implements Node${parent && `, ${parent}` || ''} {
+      ${parentFields.map(field => field)}
+      ${fields.map(field => field)}
+    }
+  ` || codeBlock `
+    ${schemaType} ${name} {
       ${fields.map(field => field)}
     }
   `
-  const connectionDef = codeBlock`
-    type ${name}Connection {
-      edges: [${name}Edge]
-      total: Int
-      pageInfo: PageInfo!
-    }
-  `
-  const edgeDef = codeBlock`
-    type ${name}Edge {
-      cursor: String!
-      node: ${type}
-    }
-  `
-  return [ typeDef, connectionDef, edgeDef ]
+  return [ typeDef ]
 }
 
 export {

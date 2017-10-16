@@ -1,7 +1,7 @@
 import { codeBlock } from 'common-tags'
 
 const objectQueryArgs = [
-  'id: ID'
+  'id: ID!'
 ].join(', ')
 
 const connectionQueryArgs = [

@@ -15,7 +15,7 @@ const simpleQueryResolvers = ({ name, type }) => {
   `
   const connectionDef = codeBlock`
     all${type}s: (root, args, { baqendResolver }) => {
-      return baqendResolver.resolveCollectionQuery('${type}', args, {})
+      return baqendResolver.resolveEntityReferenceQuery('${type}', args, {})
     }
   `
   return [ objectDef, connectionDef ]
@@ -29,7 +29,7 @@ const relayQueryResolvers = ({ name, type }) => {
   `
   const connectionDef = codeBlock`
     all${type}s: (root, args, { baqendResolver }) => {
-      return baqendResolver.resolveCollectionQuery('${type}', args, {})
+      return baqendResolver.resolveReferenceCollectionQuery('${type}', args, {})
     }
   `
   return [ objectDef, connectionDef ]

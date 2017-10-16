@@ -7,7 +7,6 @@ const distPath = path.join(process.cwd(), './dist/graphql.js')
 
 import IOService from './services/IOService'
 import Schema from './schema/Schema'
-import Bundler from './codegen/Bundler'
 
 import { generateLoader } from './codegen/loader'
 import { generateResolvers } from './codegen/resolvers'

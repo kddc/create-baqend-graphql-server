@@ -1,4 +1,5 @@
 const parseFilterInput = (filterObject, isPropertyLevel = true) => {
+  filterObject = Object.assign({}, filterObject)
   const isLogicalLevel = Object.keys(filterObject).filter(property => property.match(/(and|or|$and|$or)/)).length ? true : false
   isPropertyLevel = isLogicalLevel ? false : isPropertyLevel
   if(isLogicalLevel) {

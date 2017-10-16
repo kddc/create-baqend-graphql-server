@@ -1,6 +1,7 @@
 import parseFilterInput from './parseFilterInput'
 import parseSortByInput from './parseSortByInput'
 import { base64, unbase64 } from './base64'
+import { connectionFromArray } from 'graphql-relay'
 
 class BaqendResolver {
   constructor({ db, loader, api }) {
@@ -9,67 +10,112 @@ class BaqendResolver {
     this.api = api || 'simple'
   }
 
-  resolveReference(type, id, args, context) {
-    return this.loader[type].load(id)
-  }
-
-  resolveReferenceQuery(type, { id }, context) {
-    return this.loader[type].load(id)
-  }
-
-  resolveReferenceCollection(type, ids, args, context) {
-    if(ids && ids.length) {
-      ids = ids || []
-      args.filter = args.filter && {
-        "and":  [
-          { id: { "in": ids } },
-          args.filter
-        ]
+  resolveMap(types, entries, context) {
+    if(entries && entries.length) {
+      let resolvedKeys
+      let resolvedValues
+      if(types[0]) {
+        resolvedKeys = this.resolveReferenceSet(types[0], Object.keys(entries), context)
+      } else {
+        resolvedKeys = this.resolveSet(Object.keys(entries), context)
       }
-      return this.resolveCollectionQuery(type, args, context)
-    } else {
-      const total = 0
-      const edges = []
-      const pageInfo = this.getPageInfo()
-      return {
-        total,
-        edges,
-        pageInfo
+      if(types[1]) {
+        resolvedValues = this.resolveReferenceSet(types[1], Object.values(entries), context)
+      } else {
+        resolvedValues = this.resolveSet(Object.values(entries), context)
       }
+      return Promise.all([ resolvedKeys, resolvedValues ]).then(res => {
+        return this.combine(res[0], res[1])
+      })
     }
   }
 
-  resolveCollectionQuery(type, args, context) {
-    const { first, after, last, before } = args
-    const filter = args.filter ? args.filter : {}
-    const sortBy = args.sortBy ? args.sortBy : { id: 'ASC' }
+  // Single Objects
 
-    const filterObject = parseFilterInput(Object.assign({}, filter))
-    const sortByForwards = parseSortByInput(Object.assign({}, sortBy))
-    const sortByBackwards = parseSortByInput(Object.assign({}, sortBy), true)
+  resolveReferenceQuery(type, { id }, context) {
+    return this.resolveReference(type, id, context)
+  }
+
+  resolveReference(type, entity, context) {
+    return this.loader[type].load(entity)
+  }
+
+  // Scalar Collections
+
+  resolveList(entities, args) {
+    const total = entities.length
+    const { edges, pageInfo } = connectionFromArray(entities, args)
+    return {
+      total,
+      edges,
+      pageInfo
+    }
+  }
+
+  resolveSet(entities, args) {
+    return entities
+  }
+
+  // Reference Collections
+
+  resolveReferenceList(type, entities, args, context) {
+    args.filter = {
+      "and":  [
+        { id: { "in": entities } },
+        args.filter || {}
+      ]
+    }
+    return this.getEdges(type, args, context)
+  }
+
+  resolveReferenceSet(type, entities, args, context) {
+    return this.loader[type].loadMany(entities)
+  }
+
+  resolveReferenceCollectionQuery(type, args, context) {
+    return this.getEdges(type, args, context)
+  }
+
+  getEdges(type, args, context) {
+    const { first, after, last, before } = args
+    let filter = args.filter ? args.filter : {}
+    let sortBy = args.sortBy ? args.sortBy : { id: 'ASC' }
 
     const forwardPagination = this.isForwardPagination(first, after, last, before)
     const forwardCursor = forwardPagination && this.calculateForwardPaginationParams(first, after)
-    const forwardEdges = forwardCursor && this.fetchEdges(type, filterObject, sortByForwards, forwardCursor) || []
+    const forwardEdges = forwardCursor && this.getEntities({
+      type: type,
+      filter: filter,
+      sortBy: sortBy,
+      cursor: forwardCursor
+    }) || []
 
     const backwardPagination = this.isBackwardPagination(first, after, last, before)
     const backwardCursor = backwardPagination && this.calculateBackwardPaginationParams(last, before)
-    const backwardEdges = backwardCursor && this.fetchEdges(type, filterObject, sortByBackwards, backwardCursor) || []
+    const backwardEdges = backwardCursor && this.getEntities({
+      type: type,
+      filter: filter,
+      sortBy: sortBy,
+      cursor: backwardCursor,
+      reverse: true
+    }) || []
 
-    const total = this.getCount(type, filterObject)
+    const total = this.getCount({
+      type,
+      filter
+    })
 
     return Promise.all([ forwardEdges, backwardEdges, total ]).then(([ forwardEdges, backwardEdges, total ]) => {
-
-      forwardEdges = forwardEdges.map((edge, index) => ({
-        id: edge.id,
+      forwardEdges = forwardEdges.map((node, index) => ({
+        id: node.id,
         cursor: this.createCursor((1 + forwardCursor.offset + index), total),
-        edge: edge
+        node: node
       }))
 
-      backwardEdges = backwardEdges.map((edge, index) => ({
-        id: edge.id,
+      backwardEdges = backwardEdges.map((node, index) => ({
+        id: node.id,
         cursor: this.createCursor((total - backwardCursor.offset - index), total),
-        edge: edge
+        node: node
       })).reverse()
 
       const edges = this.mergeResults(forwardEdges, backwardEdges)
@@ -83,21 +129,28 @@ class BaqendResolver {
     })
   }
 
-  fetchEdges(type, filter, sortBy, cursor) {
+  // helpers for querying the api and prepare the result
+
+  getEntities({ type, filter, sortBy, cursor, reverse }) {
+    const filterObject = parseFilterInput(Object.assign({}, filter))
+    const sortByObject = parseSortByInput(Object.assign({}, sortBy), reverse)
+    const offset = cursor && cursor.offset || undefined
+    const limit = cursor && cursor.limit || undefined
     return this.db[type].find()
-      .where(filter)
-      .sort(sortBy)
-      .offset(cursor.offset)
-      .limit(cursor.limit)
+      .where(filterObject)
+      .sort(sortByObject)
+      .offset(offset)
+      .limit(limit)
       .resultList()
       .then(resultList => {
         return resultList.map(resultEntity => resultEntity.toJSON())
       })
   }
 
-  getCount(type, filter) {
+  getCount({ type, filter }) {
+    const filterObject = parseFilterInput(Object.assign({}, filter))
     return this.db[type].find()
-      .where(filter)
+      .where(filterObject)
       .count()
   }
 
@@ -156,6 +209,17 @@ class BaqendResolver {
     } catch(err) {
       throw "invalid cursor"
     }
+  }
+
+  combine(keys, values) {
+    var result = [];
+    for (var i = 0; i < keys.length; i++) {
+      result.push({
+        key: keys[i],
+        value: values[i]
+      })
+    }
+    return result;
   }
 
   mergeResults(a1, a2) {

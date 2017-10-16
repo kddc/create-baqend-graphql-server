@@ -1,7 +1,6 @@
 [
   {
-    "class": "/db/Post",
-    "superClass": "/db/Object",
+    "class": "/db/Object",
     "acl": {
       "schemaAdd": {
         "/db/Role/1": "allow"
@@ -13,7 +12,6 @@
         "/db/Role/1": "allow"
       }
     },
-    "metadata": {},
     "fields": {
       "id": {
         "name": "id",
@@ -23,54 +21,216 @@
           "METADATA"
         ]
       },
-      "title": {
-        "name": "title",
-        "type": "/db/String",
-        "order": 0
-      },
-      "author": {
-        "name": "author",
-        "type": "/db/User",
-        "order": 1
-      }
-    }
-  },
-  {
-    "class": "/db/User",
-    "superClass": "/db/Object",
-    "acl": {
-      "schemaAdd": {
-        "/db/Role/1": "allow"
-      },
-      "schemaReplace": {
-        "/db/Role/1": "allow"
-      },
-      "schemaSubclass": {
-        "/db/Role/1": "allow"
-      }
-    },
-    "metadata": {},
-    "fields": {
-      "id": {
-        "name": "id",
-        "type": "/db/String",
-        "order": 0,
+      "version": {
+        "name": "version",
+        "type": "/db/Integer",
+        "order": 1,
         "flags": [
           "METADATA"
         ]
       },
-      "username": {
-        "name": "username",
-        "type": "/db/String",
-        "order": 0,
+      "acl": {
+        "name": "acl",
+        "type": "/db/JsonObject",
+        "order": 2,
+        "flags": [
+          "METADATA"
+        ]
+      },
+      "createdAt": {
+        "name": "createdAt",
+        "type": "/db/DateTime",
+        "order": 3,
         "flags": [
           "READONLY"
         ]
       },
-      "posts": {
-        "name": "posts",
-        "type": "/db/collection.List[/db/Post]",
+      "updatedAt": {
+        "name": "updatedAt",
+        "type": "/db/DateTime",
+        "order": 4,
+        "flags": [
+          "READONLY"
+        ]
+      }
+    }
+  },
+  {
+    "class": "/db/Test",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "metadata": {},
+    "fields": {
+      "string": {
+        "name": "string",
+        "type": "/db/String",
+        "order": 0
+      },
+      "double": {
+        "name": "double",
+        "type": "/db/Double",
+        "order": 1
+      },
+      "integer": {
+        "name": "integer",
+        "type": "/db/Integer",
+        "order": 2
+      },
+      "boolean": {
+        "name": "boolean",
+        "type": "/db/Boolean",
+        "order": 3
+      },
+      "datetime": {
+        "name": "datetime",
+        "type": "/db/DateTime",
+        "order": 4
+      },
+      "date": {
+        "name": "date",
+        "type": "/db/Date",
         "order": 5
+      },
+      "time": {
+        "name": "time",
+        "type": "/db/Time",
+        "order": 6
+      },
+      "array": {
+        "name": "array",
+        "type": "/db/JsonArray",
+        "order": 7
+      },
+      "json": {
+        "name": "json",
+        "type": "/db/JsonObject",
+        "order": 8
+      },
+      "reference": {
+        "name": "reference",
+        "type": "/db/TestReference",
+        "order": 9
+      },
+      "embedded": {
+        "name": "embedded",
+        "type": "/db/Embedded",
+        "order": 10
+      },
+      "referenceList": {
+        "name": "referenceList",
+        "type": "/db/collection.List[/db/TestReference]",
+        "order": 11
+      },
+      "referenceSet": {
+        "name": "referenceSet",
+        "type": "/db/collection.Set[/db/TestReference]",
+        "order": 12
+      },
+      "referenceMap": {
+        "name": "referenceMap",
+        "type": "/db/collection.Map[/db/String,/db/TestReference]",
+        "order": 13
+      },
+      "stringList": {
+        "name": "stringList",
+        "type": "/db/collection.List[/db/String]",
+        "order": 14
+      },
+      "stringSet": {
+        "name": "stringSet",
+        "type": "/db/collection.Set[/db/String]",
+        "order": 15
+      },
+      "stringMap": {
+        "name": "stringMap",
+        "type": "/db/collection.Map[/db/String,/db/String]",
+        "order": 16
+      },
+      "embeddedList": {
+        "name": "embeddedList",
+        "type": "/db/collection.List[/db/Embedded]",
+        "order": 17
+      },
+      "embeddedMap": {
+        "name": "embeddedMap",
+        "type": "/db/collection.Map[/db/String,/db/Embedded]",
+        "order": 18
+      },
+      "refRefMap": {
+        "name": "refRefMap",
+        "type": "/db/collection.Map[/db/TestReference,/db/TestReference]",
+        "order": 19
+      }
+    }
+  },
+  {
+    "class": "/db/TestReference",
+    "superClass": "/db/Object",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      },
+      "schemaSubclass": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "fields": {
+      "string": {
+        "name": "string",
+        "type": "/db/String",
+        "order": 0
+      },
+      "reference": {
+        "name": "reference",
+        "type": "/db/TestReference",
+        "order": 1
+      },
+      "map": {
+        "name": "map1",
+        "type": "/db/collection.Map[/db/String,/db/String]",
+        "order": 2
+      },
+      "map2": {
+        "name": "map2",
+        "type": "/db/collection.Map[/db/TestReference,/db/TestReference]",
+        "order": 3
+      },
+      "map3": {
+        "name": "map3",
+        "type": "/db/collection.Map[/db/String,/db/TestReference]",
+        "order": 4
+      }
+    }
+  },
+  {
+    "class": "/db/Embedded",
+    "acl": {
+      "schemaAdd": {
+        "/db/Role/1": "allow"
+      },
+      "schemaReplace": {
+        "/db/Role/1": "allow"
+      }
+    },
+    "embedded": true,
+    "fields": {
+      "string": {
+        "name": "string",
+        "type": "/db/String",
+        "order": 0
       }
     }
   }

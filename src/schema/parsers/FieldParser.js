@@ -25,7 +25,10 @@ export default class FieldParser {
 
   static getType(baqendType) {
     if(this.isCollection(baqendType)) {
-      baqendType = baqendType.match(new RegExp('\\[.*\\]', 'ig'))[0].replace(/(\[|\])/g,'')
+      const baqendTypes = baqendType.match(new RegExp('\\[.*\\]', 'ig'))[0].replace(/(\[|\])/g,'').split(',')
+      return baqendTypes.map(type => {
+        return type.replace(new RegExp('\\/db\\/', 'i'), '')
+      })
     }
     return baqendType.replace(new RegExp('\\/db\\/', 'i'), '')
   }
@@ -51,15 +54,17 @@ export default class FieldParser {
         return "Float"
       case "Boolean":
         return "Boolean"
+      case "DateTime":
+      case "Date":
+      case "Time":
+        return "Date"
+      case "JsonObject":
+      case "JsonArray":
+        return "JSON"
       default:
         return null
-      // "DateTime",
-      // "Date",
-      // "Time",
       // "File",
-      // "GeoPoint",
-      // "JsonObject",
-      // "JsonArray"
+      // "GeoPoint"
     }
   }
 
@@ -70,9 +75,13 @@ export default class FieldParser {
         "type": this.mapPrimitiveToScalar(baqendType)
       }
     } else if (this.isCollection(baqendType)) {
+      const type = this.getType(baqendType)
+      const entryType = type[1] || type[0]
       return {
         "superType": "collection",
-        "type": this.getType(baqendType)
+        "entryType": this.isPrimitive(entryType) && "scalar" || "object",
+        "collectionType": this.getSuperType(baqendType).split('.')[1],
+        "type": type
       }
     }
     return {

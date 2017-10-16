@@ -10,7 +10,6 @@ const resolversPath = path.join(process.cwd(), './playground/schema/generated/re
 
 import IOService from './services/IOService'
 import Schema from './schema/Schema'
-import Bundler from './codegen/Bundler'
 
 import { generateLoader } from './codegen/loader'
 import { generateResolvers } from './codegen/resolvers'
@@ -28,7 +27,15 @@ const start = async () => {
   let types = generateTypes({}, typeDefs)
   let resolvers = generateResolvers({}, resolverDefs)
 
-  IOService.writeFile(loader, loaderPath)
+  // console.log(loader)
+  // console.log(types)
+  // console.log(resolvers)
+
+  // console.log(loader)
+  // console.log(types)
+  console.log(resolvers)
+
+  // IOService.writeFile(loader, loaderPath)
   IOService.writeFile(types, typesPath)
   IOService.writeFile(resolvers, resolversPath)
 }
