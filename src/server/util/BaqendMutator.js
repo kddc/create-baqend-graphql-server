@@ -75,7 +75,7 @@ class BaqendMutator {
         if (referenceTypes[field].collectionType) {
           let values
           if(referenceTypes[field].collectionType === 'Map') {
-            values = Object.values(json[field])
+            values = Object.keys(json[field]).map(key => json[field][key])
           } else {
             values = json[field]
           }
@@ -257,7 +257,7 @@ class BaqendMutator {
   getDepth(obj, level = 0) {
     if (typeof obj == 'object') {
       // var inc = Array.isArray(obj) ? 0 : 1
-      Object.values(obj).map((d) => {
+      Object.keys(obj).map(key => obj[key]).map((d) => {
         var depth = this.getDepth(d) + 1
         level = Math.max(depth, level);
       })

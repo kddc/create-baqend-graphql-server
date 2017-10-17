@@ -11,7 +11,7 @@ class BaqendResolver {
   }
 
   resolveMap(types, entries, context) {
-    if(entries && entries.length) {
+    if(entries) {
       let resolvedKeys
       let resolvedValues
       if(types[0]) {
@@ -20,9 +20,9 @@ class BaqendResolver {
         resolvedKeys = this.resolveSet(Object.keys(entries), context)
       }
       if(types[1]) {
-        resolvedValues = this.resolveReferenceSet(types[1], Object.values(entries), context)
+        resolvedValues = this.resolveReferenceSet(types[1], Object.keys(entries).map(key => entries[key]), context)
       } else {
-        resolvedValues = this.resolveSet(Object.values(entries), context)
+        resolvedValues = this.resolveSet(Object.keys(entries).map(key => entries[key]), context)
       }
       return Promise.all([ resolvedKeys, resolvedValues ]).then(res => {
         return this.combine(res[0], res[1])
