@@ -19,8 +19,8 @@ const deleteImports = (input) => {
 
 const start = async (args) => {
   const dest = args.dest || 'server'
+  if(!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
   if (!args.schema) {
-    console.log("Copying files...")
     if(!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
     if(!IOService.fileExists(`${dest}/util`)) IOService.mkDir(`${dest}/util`)
     if(!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
@@ -53,8 +53,14 @@ const start = async (args) => {
     }
   }
 
-  console.log('Fetching schema...')
-  const schemaJson = await fetch(`https://${args.app}.app.baqend.com/v1/schema`).then(res => res.text())
+  let schemaJson
+  if(args.file) {
+    console.log('Loading schema...')
+    schemaJson = IOService.readFile(`${args.file}`)
+  } else if (args.app) {
+    console.log('Fetching schema...')
+    schemaJson = await fetch(`https://${args.app}.app.baqend.com/v1/schema`).then(res => res.text())
+  }
   console.log('Reading schema...')
   const schema = new Schema(schemaJson)
   console.log('Generating loader...')
@@ -63,9 +69,15 @@ const start = async (args) => {
   let types = generateTypes({}, schema.getTypeDefs())
   console.log('Generating resolvers...')
   let resolvers = generateResolvers({}, schema.getResolverDefs())
-  IOService.writeFile(`${dest}/schema/generated/loader.js`, loader)
-  IOService.writeFile(`${dest}/schema/generated/typeDefs.js`, types)
-  IOService.writeFile(`${dest}/schema/generated/resolvers.js`, resolvers)
+  if (args.schema) {
+    IOService.writeFile(`${dest}/loader.js`, loader)
+    IOService.writeFile(`${dest}/typeDefs.js`, types)
+    IOService.writeFile(`${dest}/resolvers.js`, resolvers)
+  } else {
+    IOService.writeFile(`${dest}/schema/generated/loader.js`, loader)
+    IOService.writeFile(`${dest}/schema/generated/typeDefs.js`, types)
+    IOService.writeFile(`${dest}/schema/generated/resolvers.js`, resolvers)
+  }
   console.log('Generated your GraphQL server succesfully. Whoop Whoop!')
 }
 

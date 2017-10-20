@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 require('babel-register')({
-  "presets": ["es2015"],
+  "presets": [["env", {
+    "targets": {
+      "node": "8"
+    }
+  }]],
   "plugins": ["transform-es2015-destructuring", "transform-object-rest-spread"]
 });
 require('./cli.js');

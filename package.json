@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "baqend-graphql": "node cli/index.js",
+    "pretest": "babel-node test/helpers/setup.js && npm run baqend-graphql -- --schema --silent --file test/schema.json --dest test/.tmp",
     "test": "jest --verbose"
   },
   "keywords": [],
@@ -12,11 +13,10 @@
   "dependencies": {
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
     "commander": "^2.11.0",
     "common-tags": "^1.4.0",
-    "dataloader": "^1.3.0",
     "graphql": "^0.11.7",
     "graphql-relay": "^0.5.3",
     "jest-cli": "^21.2.1"
@@ -24,6 +24,8 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "baqend": "^2.8.6",
+    "graphql-tools": "^2.5.1",
+    "dataloader": "^1.3.0",
     "jest": "^21.0.2"
   },
   "bin": {

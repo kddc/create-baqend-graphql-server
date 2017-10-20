@@ -1,7 +1,7 @@
 let resolvers = {
   Test: {
-    reference: ({ reference }, args, { baqendResolver, baqendHeaders }) => {
-      return baqendResolver.resolveReference('TestReference', reference, args, { baqendHeaders })
+    reference: ({ reference }, args, { baqendResolver }) => {
+      return baqendResolver.resolveReference('TestReference', reference, args)
     },
     embedded: ({ embedded }, args, { baqendResolver }) => {
       return embedded
@@ -1217,8 +1217,8 @@ let resolvers = {
     }
   },
   Query: {
-    Test: (root, args, { baqendResolver, baqendHeaders }) => {
-      return baqendResolver.resolveReferenceQuery('Test', args, { baqendHeaders })
+    Test: (root, { id }, { baqendResolver }) => {
+      return baqendResolver.resolveReferenceQuery('Test', id, {})
     },
     allTests: (root, args, { baqendResolver }) => {
       return baqendResolver.resolveReferenceCollectionQuery('Test', args, {})
