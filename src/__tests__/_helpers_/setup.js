@@ -1,8 +1,10 @@
 import { db as baqend } from 'baqend/lib'
-import schema from '../schema.json'
+import schema from '../_schema_.json'
+import generateGraphQLDefs from '../../index'
+
 const host = 'http://127.0.0.1:8080/v1'
 
-const setup = () => {
+const setupDatabase = () => {
   let emf = new baqend.EntityManagerFactory({ host })
   return emf.createEntityManager(true).ready().then((em) => {
     return em.User.login('root', 'root').then(() => {
@@ -11,6 +13,19 @@ const setup = () => {
   }).then((schema) => {
     return new Promise((resolve) => setTimeout(() => resolve(), 1000))
   })
+}
+
+const setupGraphQL = () => {
+  generateGraphQLDefs({
+    file: 'src/__tests__/_schema_.json',
+    dest: '.tmp',
+    schema: true
+  })
+}
+
+const setup = () => {
+  setupDatabase()
+  setupGraphQL()
 }
 
 setup()

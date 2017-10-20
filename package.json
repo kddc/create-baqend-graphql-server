@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "baqend-graphql": "node cli/index.js",
-    "pretest": "babel-node test/helpers/setup.js && npm run baqend-graphql -- --schema --silent --file test/schema.json --dest test/.tmp",
+    "pretest": "babel-node src/__tests__/_helpers_/setup.js",
     "test": "jest --verbose"
   },
   "keywords": [],
@@ -31,5 +31,11 @@
   },
   "bin": {
     "baqend-graphql": "./cli/index.js"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/src/__tests__/_helpers_"
+    ]
   }
 }

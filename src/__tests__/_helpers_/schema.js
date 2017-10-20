@@ -1,11 +1,12 @@
 import { makeExecutableSchema } from 'graphql-tools'
 // import BaqendResolver from './util/BaqendResolver'
 // import BaqendMutator from './util/BaqendMutator'
-import baqendTypeDefs from '../src/server/types/types.js'
-import baqendResolvers from '../src/server/types/resolvers.js'
-import buildDataloaders from './.tmp/loader.js'
-import typeDefs from './.tmp/typeDefs.js'
-import resolvers from './.tmp/resolvers.js'
+import baqendTypeDefs from '../../server/types/types.js'
+import baqendResolvers from '../../server/types/resolvers.js'
+
+import buildDataloaders from '../../../.tmp/loader.js'
+import typeDefs from '../../../.tmp/typeDefs.js'
+import resolvers from '../../../.tmp/resolvers.js'
 
 const {
   Query: baqendQueryResolvers,
