@@ -59,14 +59,14 @@ class BaqendResolver {
   // Reference Collections
 
   resolveReferenceList(type, entities, args, context) {
-    let argsWithFilter;
-    argsWithFilter.filter = {
+    const extendenArgs = args
+    extendenArgs.filter = {
       and: [
         { id: { in: entities || [] } },
         args.filter || {},
       ],
-    };
-    return this.getEdges(type, argsWithFilter, context);
+    }
+    return this.getEdges(type, extendenArgs, context)
   }
 
   resolveReferenceSet(type, entities, args, context) {

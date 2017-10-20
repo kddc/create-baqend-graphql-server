@@ -28,7 +28,7 @@ export default class SchemaTypes {
 
   getTypeDefs() {
     const typeDefs = this.types.map(type => {
-      return type.typeDefs(this.opts)
+      return type.typeDefinitions(this.opts)
     })
 
     const connectionDefs = this.types.map(type => {

@@ -6,7 +6,7 @@ import TypeParser from './parsers/TypeParser'
 
 import { loaderDefinitions } from './defs/loaders/loaders'
 
-import { objectDefinitions } from './defs/types/objects'
+import generateObjectTypeCode from '../codegen/object/type'
 import { connectionDefinitions } from './defs/types/connections'
 import { fieldConnectionDefinitions, fieldConnectionInputDefinitions } from './defs/types/fields'
 import { filterDefinitions } from './defs/types/filters'
@@ -35,37 +35,37 @@ export default class ObjectType {
       .map(field => new Field(field))
   }
 
+  /**
+   * Generates the object load definitionsfor later batch requests
+   *
+   * @return The objects loader definitions
+   */
   loader(opts) {
-    const name = this.name
-    return !(this.embedded || this.abstract) && loaderDefinitions(opts, { name })
+    const { name } = this
+    if (!(this.embedded || this.abstract)) {
+      return loaderDefinitions(opts, { name })
+    }
+    return null
   }
 
-  typeDefs(opts) {
-    const parentFields = this.parentFields
-      .map(field => field.defs(opts))
-    const fields = this.fields
-      .map(field => field.defs(opts))
+  /**
+   * Generates the object type definitions to resolve the object references
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
+  typeDefinitions(opts) {
+    const parentFields = this.parentFields.map(field => field.defs(opts))
+    const fields = this.fields.map(field => field.defs(opts))
 
-    return objectDefinitions(opts, {
+    return generateObjectTypeCode(opts, {
       name: this.name,
       type: this.type,
       abstract: this.abstract,
       parent: this.parent,
       embedded: this.embedded,
-      parentFields: parentFields,
-      fields: fields
-    })
-  }
-
-  typeResolvers(opts) {
-    const fields = this.fields
-      .filter(field => !field.isScalar())
-      .map(field => field.resolvers(opts))
-    return objectResolvers(opts, {
-      name: this.name,
-      type: this.type,
-      abstract: this.abstract,
-      fields: fields
+      parentFields,
+      fields,
     })
   }
 
@@ -80,13 +80,6 @@ export default class ObjectType {
     return [ fieldConnectionDefs, objectConnectionDefs ]
   }
 
-  connectionResolvers(opts) {
-    return connectionResolvers(opts, {
-      name: this.name,
-      abstract: this.abstract
-    })
-  }
-
   filterDefs(opts) {
     const name = this.name
     const type = this.type
@@ -99,12 +92,6 @@ export default class ObjectType {
     const name = this.name
     const type = this.type
     return !(this.embedded || this.abstract) && queryDefinitions(opts, { name, type })
-  }
-
-  queryResolvers(opts) {
-    const name = this.name
-    const type = this.type
-    return !(this.embedded || this.abstract) && queryResolvers(opts, { name, type })
   }
 
   inputDefs(opts) {
@@ -152,6 +139,46 @@ export default class ObjectType {
     return [ objectPayloadDefs, connectionPayloadDefs ]
   }
 
+  mutationDefs(opts) {
+    return !(this.embedded || this.abstract) && mutationDefinitions(opts, {
+      name: this.name,
+      type: this.type,
+    })
+  }
+
+  connectionMutationDefs(opts) {
+    return !(this.embedded || this.abstract) && connectionMutationDefinitions(opts, {
+      name: this.name,
+      type: this.type,
+      connections: this.connections
+    })
+  }
+
+  typeResolvers(opts) {
+    const fields = this.fields
+      .filter(field => !field.isScalar())
+      .map(field => field.resolvers(opts))
+    return objectResolvers(opts, {
+      name: this.name,
+      type: this.type,
+      abstract: this.abstract,
+      fields: fields
+    })
+  }
+
+  connectionResolvers(opts) {
+    return connectionResolvers(opts, {
+      name: this.name,
+      abstract: this.abstract
+    })
+  }
+
+  queryResolvers(opts) {
+    const name = this.name
+    const type = this.type
+    return !(this.embedded || this.abstract) && queryResolvers(opts, { name, type })
+  }
+
   payloadResolvers(opts) {
     const payloadResolverDefs = payloadResolvers(opts, {
       name: this.name,
@@ -173,13 +200,6 @@ export default class ObjectType {
     return [ payloadResolverDefs, connectionPayloadResolverDefs ]
   }
 
-  mutationDefs(opts) {
-    return !(this.embedded || this.abstract) && mutationDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-    })
-  }
-
   mutationResolvers(opts) {
     const name = this.name
     const type = this.type
@@ -190,14 +210,6 @@ export default class ObjectType {
       connections: this.connections
     })
     return [ objectMutationResolverDefs, connectionMutationResolversDefs ]
-  }
-
-  connectionMutationDefs(opts) {
-    return !(this.embedded || this.abstract) && connectionMutationDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-      connections: this.connections
-    })
   }
 
 }
