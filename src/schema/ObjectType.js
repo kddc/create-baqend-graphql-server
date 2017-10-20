@@ -6,7 +6,7 @@ import TypeParser from './parsers/TypeParser'
 
 import { loaderDefinitions } from './defs/loaders/loaders'
 
-import generateObjectTypeCode from '../codegen/object/type'
+import generateObjectTypeCode from './codegen/object/type'
 import { connectionDefinitions } from './defs/types/connections'
 import { fieldConnectionDefinitions, fieldConnectionInputDefinitions } from './defs/types/fields'
 import { filterDefinitions } from './defs/types/filters'
@@ -55,8 +55,8 @@ export default class ObjectType {
    * @return The objects type definitions
    */
   typeDefinitions(opts) {
-    const parentFields = this.parentFields.map(field => field.defs(opts))
-    const fields = this.fields.map(field => field.defs(opts))
+    const parentFields = this.parentFields.map(field => field.typeDefinitions(opts))
+    const fields = this.fields.map(field => field.typeDefinitions(opts))
 
     return generateObjectTypeCode(opts, {
       name: this.name,
@@ -77,6 +77,8 @@ export default class ObjectType {
       type: this.type,
       abstract: this.abstract
     })
+    // console.log("fieldConnectionDefs", fieldConnectionDefs)
+    // console.log("objectConnectionDefs", objectConnectionDefs)
     return [ fieldConnectionDefs, objectConnectionDefs ]
   }
 
@@ -119,10 +121,10 @@ export default class ObjectType {
       name: this.name,
       type: this.type,
       parentFields: flatten(this.parentFields.map(field => {
-        return field.defs(opts)
+        return field.typeDefinitions(opts)
       })),
       fields: flatten(this.fields.map(field => {
-        return field.defs(opts)
+        return field.typeDefinitions(opts)
       }))
     })
     const connectionPayloadDefs = !(this.embedded || this.abstract) && connectionPayloadDefinitions(opts, {
@@ -130,10 +132,10 @@ export default class ObjectType {
       type: this.type,
       connections: this.connections,
       parentFields: flatten(this.parentFields.map(field => {
-        return field.defs(opts)
+        return field.typeDefinitions(opts)
       })),
       fields: flatten(this.fields.map(field => {
-        return field.defs(opts)
+        return field.typeDefinitions(opts)
       }))
     })
     return [ objectPayloadDefs, connectionPayloadDefs ]

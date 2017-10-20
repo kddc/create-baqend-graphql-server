@@ -45,6 +45,8 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/src/__tests__/_helpers_"
-    ]
+    ],
+    "collectCoverage": true,
+    "coverageFormats": ["json", "html"]
   }
 }

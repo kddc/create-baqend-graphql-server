@@ -8,9 +8,9 @@ import path from 'path'
 
 import IOService from './services/IOServiceSync'
 import Schema from './schema/Schema'
-import { generateLoader } from './codegen/loader'
-import { generateResolvers } from './codegen/resolvers'
-import { generateTypes } from './codegen/types'
+import { generateLoader } from './schema/codegen/loader'
+import { generateResolvers } from './schema/codegen/resolvers'
+import { generateTypes } from './schema/codegen/types'
 // import { generateBundle } from './codegen/bundle'
 
 const deleteImports = (input) => {

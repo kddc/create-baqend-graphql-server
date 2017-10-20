@@ -1,8 +1,5 @@
-import { codeBlock } from 'common-tags'
-
-import FieldParser from './parsers/FieldParser'
-
-import { fieldDefinitions, fieldInputDefinitions } from './defs/types/fields'
+import generateFieldTypeDefinitions from './codegen/field/type'
+import { fieldInputDefinitions } from './defs/types/fields'
 import { fieldResolvers } from './defs/resolvers/fields'
 
 /**
@@ -15,7 +12,7 @@ export default class Field {
     this.props = {
       name,
       fieldType,
-      elementType
+      elementType,
     }
   }
 
@@ -27,8 +24,8 @@ export default class Field {
     return this.props.fieldType === 'collection'
   }
 
-  defs(opts) {
-    return fieldDefinitions(opts, this.props)
+  typeDefinitions(opts) {
+    return generateFieldTypeDefinitions(opts, this.props)
   }
 
   resolvers(opts) {
@@ -38,5 +35,4 @@ export default class Field {
   inputDefs(opts) {
     return fieldInputDefinitions(opts, this.props)
   }
-
 }
