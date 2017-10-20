@@ -124,7 +124,8 @@ const filterTypes = [
   directionType
 ]
 
-const filterDefinitions = (opts, { name, type, fields }) => {
+const filterDefinitions = (opts, { name, type, parentFields, fields }) => {
+  fields = parentFields.concat(fields)
   const filterDef = codeBlock`
     input ${name}Filter {
       or: [${name}Filter!]

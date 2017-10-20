@@ -91,7 +91,8 @@ export default class ObjectType {
     const name = this.name
     const type = this.type
     const fields = this.fields
-    return !this.abstract && filterDefinitions(opts, { name, type, fields })
+    const parentFields = this.parentFields
+    return !this.abstract && filterDefinitions(opts, { name, type, parentFields, fields })
   }
 
   queryDefs(opts) {

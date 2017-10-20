@@ -1,43 +1,72 @@
 import { codeBlock } from 'common-tags'
+import fetch from 'node-fetch'
 import util from 'util'
 import path from 'path'
 
-const jsonPath = path.join(process.cwd(), './test/schema.json')
+// const jsonPath = 'test/schema.json'
+// const distPath = path.join(process.cwd(), './dist/graphql.js')
 
-const loaderPath = path.join(process.cwd(), './playground/schema/generated/loader.js')
-const typesPath = path.join(process.cwd(), './playground/schema/generated/typeDefs.js')
-const resolversPath = path.join(process.cwd(), './playground/schema/generated/resolvers.js')
-
-import IOService from './services/IOService'
+import IOService from './services/IOServiceSync'
 import Schema from './schema/Schema'
-
 import { generateLoader } from './codegen/loader'
 import { generateResolvers } from './codegen/resolvers'
 import { generateTypes } from './codegen/types'
+// import { generateBundle } from './codegen/bundle'
 
-const start = async () => {
-  let json = await IOService.readFile(jsonPath)
-  let schema = new Schema(json)
-
-  let loaderDefs = schema.getLoaderDefs()
-  let typeDefs = schema.getTypeDefs()
-  let resolverDefs = schema.getResolverDefs()
-
-  let loader = generateLoader({}, loaderDefs)
-  let types = generateTypes({}, typeDefs)
-  let resolvers = generateResolvers({}, resolverDefs)
-
-  // console.log(loader)
-  // console.log(types)
-  // console.log(resolvers)
-
-  // console.log(loader)
-  // console.log(types)
-  console.log(resolvers)
-
-  // IOService.writeFile(loader, loaderPath)
-  IOService.writeFile(types, typesPath)
-  IOService.writeFile(resolvers, resolversPath)
+const deleteImports = (input) => {
+  return input.replace(/^(import|export).*\n?/gm, '')
 }
 
-start()
+const start = async (args) => {
+  const dest = args.dest || 'server'
+  if (!args.schema) {
+    console.log("Copying files...")
+    if(!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
+    if(!IOService.fileExists(`${dest}/util`)) IOService.mkDir(`${dest}/util`)
+    if(!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
+    if(!IOService.fileExists(`${dest}/codegen`)) IOService.mkDir(`${dest}/codegen`)
+    if(!IOService.fileExists(`${dest}/schema/generated`)) IOService.mkDir(`${dest}/schema/generated`)
+    if(!IOService.fileExists(`${dest}/schema/baqend`)) IOService.mkDir(`${dest}/schema/baqend`)
+    if(!IOService.fileExists(`${dest}/schema/custom`)) IOService.mkDir(`${dest}/schema/custom`)
+
+    IOService.copyFile(`src/server/index.js`, `${dest}/index.js`)
+    IOService.copyFile(`src/server/bundle.js`, `${dest}/bundle.js`)
+    IOService.copyFile(`src/server/package.json`, `${dest}/package.json`)
+    IOService.copyFile(`src/server/.babelrc`, `${dest}/.babelrc`)
+
+    IOService.copyFile(`src/server/util/BaqendResolver.js`, `${dest}/util/BaqendResolver.js`)
+    IOService.copyFile(`src/server/util/BaqendMutator.js`, `${dest}/util/BaqendMutator.js`)
+    IOService.copyFile(`src/server/util/base64.js`, `${dest}/util/base64.js`)
+    IOService.copyFile(`src/server/util/parseFilterInput.js`, `${dest}/util/parseFilterInput.js`)
+    IOService.copyFile(`src/server/util/parseSortByInput.js`, `${dest}/util/parseSortByInput.js`)
+
+    IOService.copyFile(`src/server/codegen/bundle.js`, `${dest}/codegen/bundle.js`)
+
+    IOService.copyFile(`src/server/types/types.js`, `${dest}/schema/baqend/types.js`)
+    IOService.copyFile(`src/server/types/resolvers.js`, `${dest}/schema/baqend/resolvers.js`)
+
+    if(!IOService.fileExists(`${dest}/schema/custom/types.js`)) {
+      IOService.copyFile(`src/server/custom/types.js`, `${dest}/schema/custom/types.js`)
+    }
+    if(!IOService.fileExists(`${dest}/schema/custom/resolvers.js`)) {
+      IOService.copyFile(`src/server/custom/resolvers.js`, `${dest}/schema/custom/resolvers.js`)
+    }
+  }
+
+  console.log('Fetching schema...')
+  const schemaJson = await fetch(`https://${args.app}.app.baqend.com/v1/schema`).then(res => res.text())
+  console.log('Reading schema...')
+  const schema = new Schema(schemaJson)
+  console.log('Generating loader...')
+  let loader = generateLoader({}, schema.getLoaderDefs())
+  console.log('Generating types...')
+  let types = generateTypes({}, schema.getTypeDefs())
+  console.log('Generating resolvers...')
+  let resolvers = generateResolvers({}, schema.getResolverDefs())
+  IOService.writeFile(`${dest}/schema/generated/loader.js`, loader)
+  IOService.writeFile(`${dest}/schema/generated/typeDefs.js`, types)
+  IOService.writeFile(`${dest}/schema/generated/resolvers.js`, resolvers)
+  console.log('Generated your GraphQL server succesfully. Whoop Whoop!')
+}
+
+export default start

@@ -44,7 +44,7 @@ const generateBundle = (opts, args) => {
       let baqendMutator = new BaqendMutator({ db: db })
       let variables = data.variables
       let operationName = data.operationName
-      return graphql(schema, query, null, { baqendResolver }, variables, operationName).then((response) => {
+      return graphql(schema, query, null, { baqendResolver, baqendMutator }, variables, operationName).then((response) => {
         res.json(response)
       })
     }
