@@ -1,7 +1,7 @@
 import { codeBlock } from 'common-tags'
 import generateFieldConnectionTypeDefinitions from './connectionTypes'
 
-describe('Generate field type definition', () => {
+describe('Generate field connection type definitions', () => {
   test('it should return null for non map collection', () => {
     const expected = []
     const params = {
