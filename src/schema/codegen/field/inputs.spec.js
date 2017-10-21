@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import generateFieldInputDefinitions from './input'
+import generateFieldInputDefinitions from './inputs'
 
 describe('Generate field input definition', () => {
   test('it should generate a string input definition', () => {
