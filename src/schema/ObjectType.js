@@ -1,8 +1,6 @@
 import flatten from '../util/flatten'
-import { codeBlock } from 'common-tags'
 
 import Field from './Field'
-import TypeParser from './parsers/TypeParser'
 
 import { loaderDefinitions } from './defs/loaders/loaders'
 
@@ -23,12 +21,12 @@ import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/p
 
 export default class ObjectType {
   constructor(schemaObject) {
-    this.name = schemaObject['name']
-    this.type = schemaObject['name']
-    this.abstract = schemaObject['abstract']
-    this.parent = schemaObject['parent']
-    this.embedded = schemaObject['embedded']
-    this.connections = schemaObject['connections']
+    this.name = schemaObject.name
+    this.type = schemaObject.name
+    this.abstract = schemaObject.abstract
+    this.parent = schemaObject.parent
+    this.embedded = schemaObject.embedded
+    this.connections = schemaObject.connections
     this.parentFields = schemaObject.parentFields
       .map(field => new Field(field))
     this.fields = schemaObject.fields
@@ -38,6 +36,7 @@ export default class ObjectType {
   /**
    * Generates the object load definitionsfor later batch requests
    *
+   * @param opts Some options to pass to the generator
    * @return The objects loader definitions
    */
   loader(opts) {
@@ -51,12 +50,18 @@ export default class ObjectType {
   /**
    * Generates the object type definitions to resolve the object references
    *
+   * type ${name} {
+   *   field: FieldType
+   * }
+   *
    * @param opts Some options to pass to the generator
    * @return The objects type definitions
    */
   typeDefinitions(opts) {
-    const parentFields = this.parentFields.map(field => field.typeDefinitions(opts))
-    const fields = this.fields.map(field => field.typeDefinitions(opts))
+    const parentFields = this.parentFields
+      .map(field => field.typeDefinitions(opts))
+    const fields = this.fields
+      .map(field => field.typeDefinitions(opts))
 
     return generateObjectTypeCode(opts, {
       name: this.name,
@@ -69,17 +74,28 @@ export default class ObjectType {
     })
   }
 
+  /**
+   * Generates the connection type definitions for list, sets, and maps
+   *
+   * type ${name}Connection { ... }
+   * type ${name}Edge { ... }
+   * type ${key}${value}MapEntry { ... }
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   connectionDefs(opts) {
     const fieldConnectionDefs = this.fields
       .map(field => fieldConnectionDefinitions(opts, field.props))
     const objectConnectionDefs = connectionDefinitions(opts, {
       name: this.name,
       type: this.type,
-      abstract: this.abstract
+      abstract: this.abstract,
     })
-    // console.log("fieldConnectionDefs", fieldConnectionDefs)
-    // console.log("objectConnectionDefs", objectConnectionDefs)
-    return [ fieldConnectionDefs, objectConnectionDefs ]
+    return [
+      fieldConnectionDefs,
+      objectConnectionDefs,
+    ]
   }
 
   filterDefs(opts) {

@@ -1,5 +1,6 @@
 import generateFieldTypeDefinitions from './codegen/field/type'
-import { fieldInputDefinitions } from './defs/types/fields'
+import generateFieldInputDefinitions from './codegen/field/input'
+// import { fieldInputDefinitions } from './defs/types/fields'
 import { fieldResolvers } from './defs/resolvers/fields'
 
 /**
@@ -33,6 +34,6 @@ export default class Field {
   }
 
   inputDefs(opts) {
-    return fieldInputDefinitions(opts, this.props)
+    return generateFieldInputDefinitions(opts, this.props)
   }
 }

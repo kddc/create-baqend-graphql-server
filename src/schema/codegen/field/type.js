@@ -7,6 +7,13 @@ const connectionArgs = [
   'before: String',
 ].join(', ')
 
+/**
+ * Generates the field type definitions to resolve the object references
+ *
+ * @param opts Some options to pass to the generator like which api should be used
+ * @param args Input arguments for generating the code
+ * @return The field type definitions
+ */
 const relay = ({ name, fieldType, elementType }) => {
   const definitions = []
   if (fieldType === 'collection') {
@@ -58,13 +65,6 @@ const relay = ({ name, fieldType, elementType }) => {
   return definitions
 }
 
-/**
- * Generates the field type definitions to resolve the object references
- *
- * @param opts Some options to pass to the generator like which api should be used
- * @param args Input arguments for generating the code
- * @return The field type definitions
- */
 const generateFieldTypeDefinitions = (opts, args) => relay(args)
 
 export default generateFieldTypeDefinitions
