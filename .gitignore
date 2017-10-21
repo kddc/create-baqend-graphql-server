@@ -5,3 +5,4 @@ dist
 /server
 /server2
 /.tmp
+/coverage
