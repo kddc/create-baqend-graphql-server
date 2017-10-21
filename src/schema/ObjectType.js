@@ -4,9 +4,10 @@ import Field from './Field'
 
 import { loaderDefinitions } from './defs/loaders/loaders'
 
-import generateObjectTypeCode from './codegen/object/type'
-import { connectionDefinitions } from './defs/types/connections'
-import { fieldConnectionDefinitions, fieldConnectionInputDefinitions } from './defs/types/fields'
+import generateTypeDefinitions from './codegen/object/type'
+import generateConnectionTypeDefinitions from './codegen/object/connections'
+// import { connectionDefinitions } from './defs/types/connections'
+import { fieldConnectionInputDefinitions } from './defs/types/fields'
 import { filterDefinitions } from './defs/types/filters'
 import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
 import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
@@ -63,7 +64,7 @@ export default class ObjectType {
     const fields = this.fields
       .map(field => field.typeDefinitions(opts))
 
-    return generateObjectTypeCode(opts, {
+    const typeDefinitions = generateTypeDefinitions(opts, {
       name: this.name,
       type: this.type,
       abstract: this.abstract,
@@ -72,6 +73,9 @@ export default class ObjectType {
       parentFields,
       fields,
     })
+    return [
+      typeDefinitions,
+    ]
   }
 
   /**
@@ -85,16 +89,17 @@ export default class ObjectType {
    * @return The objects type definitions
    */
   connectionDefs(opts) {
-    const fieldConnectionDefs = this.fields
-      .map(field => fieldConnectionDefinitions(opts, field.props))
-    const objectConnectionDefs = connectionDefinitions(opts, {
+    const fieldConnectionDefinitions = this.fields
+      .map(field => field.connectionTypeDefinitions(opts))
+
+    const connectionDefinitions = generateConnectionTypeDefinitions(opts, {
       name: this.name,
       type: this.type,
       abstract: this.abstract,
     })
     return [
-      fieldConnectionDefs,
-      objectConnectionDefs,
+      fieldConnectionDefinitions,
+      connectionDefinitions,
     ]
   }
 
