@@ -28,6 +28,7 @@ class BaqendResolver {
         return this.combine(res[0], res[1])
       })
     }
+    return null
   }
 
   // Single Objects
@@ -38,6 +39,18 @@ class BaqendResolver {
 
   resolveReference(type, entity, context) {
     return this.loader[type].load(entity)
+  }
+
+  resolveNodeQuery({ id }, context) {
+    const { type } = this.fromGlobalId(id)
+    return this.resolveReference(type, id, context)
+  }
+
+  resolveNodeCollectionQuery({ ids }, context) {
+    return ids.map((id) => {
+      const { type } = this.fromGlobalId(id)
+      return this.resolveReference(type, id, context)
+    })
   }
 
   // Scalar Collections
@@ -239,6 +252,13 @@ class BaqendResolver {
         }
      }
      return arr;
+  }
+
+  fromGlobalId(id) {
+    return {
+      type: id.split('/')[2],
+      id: id
+    }
   }
 
 }
