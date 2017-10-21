@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/server/util/BaqendMutator.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">All files</a> / <a href="index.html">src/server/util</a> BaqendMutator.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.7% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>1/143</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/70</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">2.86% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/35</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.72% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>1/139</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">class BaqendMutator {
+  constructor({ db }) {
+    this.db = db
+  }
+&nbsp;
+  // Single Objects
+&nbsp;
+<span class="fstat-no" title="function not covered" >  cr</span>eateEntity(type, { input }, context) {
+    const { clientMutationId } = <span class="cstat-no" title="statement not covered" >input</span>
+    const json = <span class="cstat-no" title="statement not covered" >this.transformInput({ type }, input)</span>
+    const fields = <span class="cstat-no" title="statement not covered" >Object.keys(json)</span>
+    const entity = <span class="cstat-no" title="statement not covered" >new this.db[type]()</span>
+    const resolvedValues = <span class="cstat-no" title="statement not covered" >this.resolveValues(type, fields, json, context)</span>
+<span class="cstat-no" title="statement not covered" >    return Promise.all([entity, Promise.all(resolvedValues)]).then(<span class="fstat-no" title="function not covered" >([</span> entity, resolvedValues ]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if(fields.length !== resolvedValues.length) {</span>
+<span class="cstat-no" title="statement not covered" >        throw 'Something went wrong while creating some references'</span>
+      }
+<span class="cstat-no" title="statement not covered" >      fields.forEach(<span class="fstat-no" title="function not covered" >(f</span>ield, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        entity[field] = resolvedValues[index]</span>
+      })
+<span class="cstat-no" title="statement not covered" >      return entity.insert().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        res = res.toJSON()</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          clientMutationId,
+          ...res
+        }
+      })
+    })
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  up</span>dateEntity(type, { input }, context) {
+    const { clientMutationId, id } = <span class="cstat-no" title="statement not covered" >input</span>
+<span class="cstat-no" title="statement not covered" >    delete input['id']</span>
+<span class="cstat-no" title="statement not covered" >    delete input['clientMutationId']</span>
+    const json = <span class="cstat-no" title="statement not covered" >this.transformInput({ type }, input)</span>
+    const fields = <span class="cstat-no" title="statement not covered" >Object.keys(json)</span>
+    const entity = <span class="cstat-no" title="statement not covered" >this.db[type].load(id)</span>
+    const resolvedValues = <span class="cstat-no" title="statement not covered" >this.resolveValues(type, fields, json, context)</span>
+<span class="cstat-no" title="statement not covered" >    return Promise.all([entity, Promise.all(resolvedValues)]).then(<span class="fstat-no" title="function not covered" >([</span> entity, resolvedValues ]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if(fields.length !== resolvedValues.length) {</span>
+<span class="cstat-no" title="statement not covered" >        throw 'Something went wrong while creating some references'</span>
+      }
+<span class="cstat-no" title="statement not covered" >      fields.forEach(<span class="fstat-no" title="function not covered" >(f</span>ield, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        entity[field] = resolvedValues[index]</span>
+      })
+<span class="cstat-no" title="statement not covered" >      return entity.update().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        res = res.toJSON()</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          clientMutationId,
+          ...res
+        }
+      })
+    })
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  de</span>leteEntity(type, { input }, context) {
+    const { clientMutationId, id } = <span class="cstat-no" title="statement not covered" >input</span>
+<span class="cstat-no" title="statement not covered" >    return this.db[type].load(id).then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      return res.delete().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          clientMutationId,
+          id
+        }
+      })
+    })
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  re</span>solveValues(type, fields, json, context) {
+    const referenceTypes = <span class="cstat-no" title="statement not covered" >this.getReferenceTypes(type)</span>
+    let resolvedValues = <span class="cstat-no" title="statement not covered" >[]</span>
+<span class="cstat-no" title="statement not covered" >    fields.forEach(<span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; {</span>
+      let value
+<span class="cstat-no" title="statement not covered" >      if (referenceTypes[field] &amp;&amp; !referenceTypes[field].elementType.basic) {</span>
+        const elementType = <span class="cstat-no" title="statement not covered" >referenceTypes[field].elementType.type</span>
+<span class="cstat-no" title="statement not covered" >        if (referenceTypes[field].collectionType) {</span>
+          let values
+<span class="cstat-no" title="statement not covered" >          if(referenceTypes[field].collectionType === 'Map') {</span>
+<span class="cstat-no" title="statement not covered" >            values = Object.keys(json[field]).map(<span class="fstat-no" title="function not covered" >ke</span>y =&gt; <span class="cstat-no" title="statement not covered" >json[field][key])</span></span>
+          } else {
+<span class="cstat-no" title="statement not covered" >            values = json[field]</span>
+          }
+<span class="cstat-no" title="statement not covered" >          values = values.map(<span class="fstat-no" title="function not covered" >en</span>try =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if(typeof entry === 'string') {</span>
+<span class="cstat-no" title="statement not covered" >              return this.db.getReference(entry)</span>
+            } else {
+              const depth = <span class="cstat-no" title="statement not covered" >this.getDepth(entry)</span>
+              const entity = <span class="cstat-no" title="statement not covered" >this.db[elementType].fromJSON(entry)</span>
+<span class="cstat-no" title="statement not covered" >              return entity.save({ depth })</span>
+            }
+          })
+<span class="cstat-no" title="statement not covered" >          if(referenceTypes[field].collectionType === 'Map') {</span>
+<span class="cstat-no" title="statement not covered" >            value = Promise.all(values).then(<span class="fstat-no" title="function not covered" >va</span>lues =&gt; {</span>
+              let obj = <span class="cstat-no" title="statement not covered" >new this.db.Map()</span>
+<span class="cstat-no" title="statement not covered" >              Object.keys(json[field]).forEach(<span class="fstat-no" title="function not covered" >(k</span>ey, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj.set(key, values[index])</span>
+              })
+<span class="cstat-no" title="statement not covered" >              return obj</span>
+            })
+          } else {
+<span class="cstat-no" title="statement not covered" >            value = Promise.all(values)</span>
+          }
+        } else {
+<span class="cstat-no" title="statement not covered" >          if(typeof json[field] === 'string') {</span>
+<span class="cstat-no" title="statement not covered" >            value = this.db.getReference(json[field])</span>
+          } else {
+            const depth = <span class="cstat-no" title="statement not covered" >this.getDepth(json[field])</span>
+            const entity = <span class="cstat-no" title="statement not covered" >this.db[elementType].fromJSON(json[field])</span>
+<span class="cstat-no" title="statement not covered" >            value = entity.save({ depth })</span>
+          }
+        }
+      } else {
+<span class="cstat-no" title="statement not covered" >        value = json[field]</span>
+      }
+<span class="cstat-no" title="statement not covered" >      resolvedValues.push(value)</span>
+    })
+<span class="cstat-no" title="statement not covered" >    return resolvedValues</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  ad</span>dEntryToCollection(type, field, { input }, context) {
+    const { clientMutationId, id } = <span class="cstat-no" title="statement not covered" >input</span>
+    const referenceTypes = <span class="cstat-no" title="statement not covered" >this.getReferenceTypes(type)</span>
+    const collectionType = <span class="cstat-no" title="statement not covered" >referenceTypes[field].collectionType</span>
+    const elementType = <span class="cstat-no" title="statement not covered" >referenceTypes[field].elementType</span>
+    const entry = <span class="cstat-no" title="statement not covered" >this.getCollectionMutationInput(collectionType, field, input)</span>
+    let object = <span class="cstat-no" title="statement not covered" >this.db[type].load(id)</span>
+    let element
+<span class="cstat-no" title="statement not covered" >    if (!elementType.basic &amp;&amp; !entry.reference) {</span>
+<span class="cstat-no" title="statement not covered" >      element = this.transformInput({ type: elementType.type }, entry.element)</span>
+<span class="cstat-no" title="statement not covered" >      element = this.db[elementType.type].fromJSON(element)</span>
+<span class="cstat-no" title="statement not covered" >      element = element.save().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; <span class="cstat-no" title="statement not covered" >res.id)</span></span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      element = entry.element</span>
+    }
+<span class="cstat-no" title="statement not covered" >    return Promise.all([ object, element ]).then(<span class="fstat-no" title="function not covered" >([</span>object, element]) =&gt; {</span>
+      let partialUpdateOperation
+<span class="cstat-no" title="statement not covered" >      switch(collectionType) {</span>
+        case 'Map':
+<span class="cstat-no" title="statement not covered" >          partialUpdateOperation = object.partialUpdate().put(field, entry.key, element)</span>
+<span class="cstat-no" title="statement not covered" >          break</span>
+        case 'Set':
+<span class="cstat-no" title="statement not covered" >          partialUpdateOperation = object.partialUpdate().add(field, element)</span>
+<span class="cstat-no" title="statement not covered" >          break</span>
+        case 'List':
+<span class="cstat-no" title="statement not covered" >          partialUpdateOperation = object.partialUpdate().push(field, element)</span>
+<span class="cstat-no" title="statement not covered" >          break</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return partialUpdateOperation.execute().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        res = res.toJSON()</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          clientMutationId,
+          ...res
+        }
+      })
+    })
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  re</span>moveEntryFromCollection(type, field, { input }, context) {
+    const { clientMutationId, id } = <span class="cstat-no" title="statement not covered" >input</span>
+    const referenceTypes = <span class="cstat-no" title="statement not covered" >this.getReferenceTypes(type)</span>
+    const collectionType = <span class="cstat-no" title="statement not covered" >referenceTypes[field].collectionType</span>
+    const entry = <span class="cstat-no" title="statement not covered" >this.getCollectionMutationInput(collectionType, field, input)</span>
+<span class="cstat-no" title="statement not covered" >    if(entry.key || entry.element) {</span>
+      let element = <span class="cstat-no" title="statement not covered" >entry.key || entry.element</span>
+<span class="cstat-no" title="statement not covered" >      return this.db[type].load(id).then(<span class="fstat-no" title="function not covered" >ob</span>ject =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return object.partialUpdate().remove(field, element).execute().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >          res = res.toJSON()</span>
+<span class="cstat-no" title="statement not covered" >          return {</span>
+            clientMutationId,
+            ...res
+          }
+        })
+      })
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  tr</span>ansformInput({ type, basic }, json) {
+    let depths = <span class="cstat-no" title="statement not covered" >[ 0 ]</span>
+<span class="cstat-no" title="statement not covered" >    if(!basic) {</span>
+      let referenceTypes = <span class="cstat-no" title="statement not covered" >this.getReferenceTypes(type)</span>
+<span class="cstat-no" title="statement not covered" >      Object.keys(referenceTypes).map(<span class="fstat-no" title="function not covered" >(k</span>ey) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if(json[`${key}Id`] || json[`${key}Ids`]) {</span>
+<span class="cstat-no" title="statement not covered" >          if (json[`${key}Id`]) {</span>
+<span class="cstat-no" title="statement not covered" >            json[key] = json[`${key}Id`]</span>
+<span class="cstat-no" title="statement not covered" >            delete json[`${key}Id`]</span>
+          } else <span class="cstat-no" title="statement not covered" >if (json[`${key}Ids`] &amp;&amp; Array.isArray(json[`${key}Ids`])) {</span>
+<span class="cstat-no" title="statement not covered" >            json[key] = json[`${key}Ids`]</span>
+<span class="cstat-no" title="statement not covered" >            delete json[`${key}Ids`]</span>
+          }
+        }
+<span class="cstat-no" title="statement not covered" >        if (json[key]) {</span>
+          const { collectionType, keyType, elementType } = <span class="cstat-no" title="statement not covered" >referenceTypes[key]</span>
+<span class="cstat-no" title="statement not covered" >          if (collectionType) {</span>
+<span class="cstat-no" title="statement not covered" >            if (collectionType == 'Map') {</span>
+              let obj = <span class="cstat-no" title="statement not covered" >{}</span>
+<span class="cstat-no" title="statement not covered" >              json[key].map(<span class="fstat-no" title="function not covered" >({</span> key, value }) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj[key] = this.transformInput(elementType, value)</span>
+              })
+<span class="cstat-no" title="statement not covered" >              json[key] = obj</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >              json[key] = json[key].map(<span class="fstat-no" title="function not covered" >en</span>try =&gt; <span class="cstat-no" title="statement not covered" >this.transformInput(elementType, entry))</span></span>
+            }
+          } else {
+<span class="cstat-no" title="statement not covered" >            json[key] = this.transformInput(elementType, json[key], true)</span>
+          }
+        }
+      })
+    }
+<span class="cstat-no" title="statement not covered" >    return json</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  ge</span>tCollectionMutationInput(collectionType, field, input) {
+    let reference = <span class="cstat-no" title="statement not covered" >false</span>
+<span class="cstat-no" title="statement not covered" >    if(input[`${field}EntryIds`]) {</span>
+<span class="cstat-no" title="statement not covered" >      reference = true</span>
+<span class="cstat-no" title="statement not covered" >      input = input[`${field}EntryIds`]</span>
+    } else <span class="cstat-no" title="statement not covered" >if(input[`${field}EntryId`]) {</span>
+<span class="cstat-no" title="statement not covered" >      reference = true</span>
+<span class="cstat-no" title="statement not covered" >      input = input[`${field}EntryId`]</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      input = input[`${field}Entry`]</span>
+    }
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      reference: reference,
+      key: collectionType == 'Map' &amp;&amp; input['key'],
+      element: collectionType == 'Map' &amp;&amp; input['value'] || input,
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  ge</span>tReferenceTypes(type) {
+    let collectionTypes = <span class="cstat-no" title="statement not covered" >{ 1: 'List', 2: 'Map', 3: 'Set' }</span>
+    let referenceTypes = <span class="cstat-no" title="statement not covered" >{}</span>
+<span class="cstat-no" title="statement not covered" >    this.db[type]()['_metadata'].type.declaredAttributes.map(<span class="fstat-no" title="function not covered" >at</span>tribute =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if(attribute.type &amp;&amp; (attribute.type.isEntity || attribute.type.isEmbeddable)) {</span>
+<span class="cstat-no" title="statement not covered" >        referenceTypes[attribute.name] = {</span>
+          elementType: {
+            type: attribute.type.name,
+            basic: attribute.type.isBasic
+          }
+        }
+      } else <span class="cstat-no" title="statement not covered" >if (attribute.isCollection) {</span>
+<span class="cstat-no" title="statement not covered" >        referenceTypes[attribute.name] = {</span>
+          collectionType: collectionTypes[attribute.collectionType],
+          keyType: attribute.keyType &amp;&amp; {
+            type: attribute.keyType.name,
+            basic: attribute.keyType.isBasic
+          },
+          elementType: {
+            type: attribute.elementType.name,
+            basic: attribute.elementType.isBasic
+          }
+        }
+      }
+    })
+<span class="cstat-no" title="statement not covered" >    return referenceTypes</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  ge</span>tDepth(obj, level = <span class="branch-0 cbranch-no" title="branch not covered" >0)</span> {
+<span class="cstat-no" title="statement not covered" >    if (typeof obj == 'object') {</span>
+      // var inc = Array.isArray(obj) ? 0 : 1
+<span class="cstat-no" title="statement not covered" >      Object.keys(obj).map(<span class="fstat-no" title="function not covered" >ke</span>y =&gt; <span class="cstat-no" title="statement not covered" >obj[key])</span>.map(<span class="fstat-no" title="function not covered" >(d</span>) =&gt; {</span>
+        var depth = <span class="cstat-no" title="statement not covered" >this.getDepth(d) + 1</span>
+<span class="cstat-no" title="statement not covered" >        level = Math.max(depth, level);</span>
+      })
+    }
+<span class="cstat-no" title="statement not covered" >    return level</span>
+  }
+&nbsp;
+}
+&nbsp;
+export default BaqendMutator
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Oct 21 2017 22:08:52 GMT+0200 (CEST)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
