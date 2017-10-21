@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import generateObjectTypeDefinitions from '../../../schema/codegen/object/type'
+import generateObjectTypeDefinitions from './type'
 
 const parentFields = ['id: ID!']
 const fields = ['string: String']

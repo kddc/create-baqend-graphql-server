@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import generateFieldTypeDefinitions from '../../../schema/codegen/field/type'
+import generateFieldTypeDefinitions from './type'
 
 describe('Generate field type definition', () => {
   test('it should generate a id type definition', () => {

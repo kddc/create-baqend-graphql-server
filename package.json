@@ -7,8 +7,8 @@
     "pretest": "babel-node src/__tests__/_helpers_/setup.js",
     "test": "jest --verbose",
     "test:watch": "jest --verbose --watch",
-    "test:generators": "jest src/__tests__/generators --verbose",
-    "test:generators:watch": "jest src/__tests__/generators --verbose --watch"
+    "test:generators": "jest src/schema --verbose",
+    "test:generators:watch": "jest src/schema --verbose --watch"
   },
   "keywords": [],
   "author": "",
