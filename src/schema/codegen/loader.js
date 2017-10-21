@@ -9,7 +9,9 @@ const generateLoader = (opts, args) => {
         .where({ id: { $in: keys } })
         .resultList()
         .then(resultList => {
-          return resultList.map(resultEntity => resultEntity.toJSON())
+          return keys.map(key => {
+            return resultList.find(entity => key == entity.id) || null
+          })
         })
     }
     let buildDataloaders = ({ db }) => {
@@ -22,5 +24,5 @@ const generateLoader = (opts, args) => {
 }
 
 export {
-  generateLoader
+  generateLoader,
 }
