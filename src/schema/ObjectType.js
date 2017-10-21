@@ -6,9 +6,11 @@ import { loaderDefinitions } from './defs/loaders/loaders'
 
 import generateTypeDefinitions from './codegen/object/type'
 import generateConnectionTypeDefinitions from './codegen/object/connections'
+import generateFilterInputDefinitions from './codegen/object/filterInputs'
+import generateSortByInputDefinitions from './codegen/object/sortByInputs'
 // import { connectionDefinitions } from './defs/types/connections'
 import { fieldConnectionInputDefinitions } from './defs/types/fields'
-import { filterDefinitions } from './defs/types/filters'
+// import { filterDefinitions } from './defs/types/filters'
 import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
 import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
 import { queryDefinitions } from './defs/types/queries'
@@ -103,12 +105,38 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the filter input definitions for root and reference queries
+   *
+   * type ${name}Connection { ... }
+   * type ${name}Edge { ... }
+   * type ${key}${value}MapEntry { ... }
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   filterDefs(opts) {
-    const name = this.name
-    const type = this.type
-    const fields = this.fields
-    const parentFields = this.parentFields
-    return !this.abstract && filterDefinitions(opts, { name, type, parentFields, fields })
+    const { name, abstract } = this
+    const filterInputDefinitions = generateFilterInputDefinitions(opts, {
+      name,
+      abstract,
+      parentFields: this.parentFields
+        .map(field => field.filterInputDefinitions(opts)),
+      fields: this.fields
+        .map(field => field.filterInputDefinitions(opts)),
+    })
+    const sortByInputDefinitions = generateSortByInputDefinitions(opts, {
+      name,
+      abstract,
+      parentFields: this.parentFields
+        .map(field => field.sortByInputDefinitions(opts)),
+      fields: this.fields
+        .map(field => field.sortByInputDefinitions(opts)),
+    })
+    return [
+      filterInputDefinitions,
+      sortByInputDefinitions,
+    ]
   }
 
   queryDefs(opts) {

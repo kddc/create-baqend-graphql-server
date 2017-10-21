@@ -4,8 +4,8 @@ import generateConnectionTypeDefinitions from './connections'
 const parentFields = ['id: ID!']
 const fields = ['string: String']
 
-describe('Generate object type definition', () => {
-  test('it should generate no type definitions for abstract types', () => {
+describe('Generate object connection type definitions', () => {
+  test('it should generate no connection type definitions for abstract types', () => {
     const params = {
       name: 'TestObject',
       abstract: true,
