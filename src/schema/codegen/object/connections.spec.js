@@ -46,5 +46,6 @@ describe('Generate object connection type definitions', () => {
     const definitions = generateConnectionTypeDefinitions({}, params)
     expect(definitions.length).toBe(2)
     expect(definitions[0]).toEqual(expected[0])
+    expect(definitions[1]).toEqual(expected[1])
   })
 })

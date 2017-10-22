@@ -25,8 +25,9 @@ import generateConnectionMutationFieldDefinitions from './codegen/connections/mu
 // import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
 
 import generateResolverDefinitions from './codegen/object/resolvers/resolver'
+import generateConnectionResolverDefinitions from './codegen/object/resolvers/connections'
 // import { objectResolvers } from './defs/resolvers/objects'
-import { connectionResolvers } from './defs/resolvers/connections'
+// import { connectionResolvers } from './defs/resolvers/connections'
 import { queryResolvers } from './defs/resolvers/queries'
 import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
 import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/payloads'
@@ -294,11 +295,24 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the object resolvers
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   connectionResolvers(opts) {
-    return connectionResolvers(opts, {
-      name: this.name,
-      abstract: this.abstract
+    const { name, abstract } = this
+    const connectionResolverDefinitions = generateConnectionResolverDefinitions(opts, {
+      name, abstract,
     })
+
+    return [
+      connectionResolverDefinitions,
+    ]
   }
 
   queryResolvers(opts) {
