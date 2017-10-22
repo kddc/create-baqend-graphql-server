@@ -1,7 +1,7 @@
 import { codeBlock } from 'common-tags'
 import generateFieldResolverDefinitions from './resolver'
 
-describe('Generate field type definition', () => {
+describe('Generate field resolver definitions', () => {
   test('it should generate a scalar type definition', () => {
     const params = {
       name: 'string',
@@ -17,7 +17,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a reference type definition', () => {
+  test('it should generate a reference resolver definition', () => {
     const params = {
       name: 'reference',
       fieldType: 'reference',
@@ -32,7 +32,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a embedded type definition', () => {
+  test('it should generate a embedded resolver definition', () => {
     const params = {
       name: 'embedded',
       fieldType: 'embedded',
@@ -47,7 +47,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a reference list type definition', () => {
+  test('it should generate a reference list resolver definition', () => {
     const params = {
       name: 'referenceList',
       fieldType: 'collection',
@@ -65,7 +65,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a scalar list type definition', () => {
+  test('it should generate a scalar list resolver definition', () => {
     const params = {
       name: 'stringList',
       fieldType: 'collection',
@@ -83,7 +83,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a embedded list type definition', () => {
+  test('it should generate a embedded list resolver definition', () => {
     const params = {
       name: 'embeddedList',
       fieldType: 'collection',
@@ -101,7 +101,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a reference set type definition', () => {
+  test('it should generate a reference set resolver definition', () => {
     const params = {
       name: 'referenceSet',
       fieldType: 'collection',
@@ -119,7 +119,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a scalar set type definition', () => {
+  test('it should generate a scalar set resolver definition', () => {
     const params = {
       name: 'stringSet',
       fieldType: 'collection',
@@ -137,7 +137,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a scalar X reference map type definition', () => {
+  test('it should generate a scalar X reference map resolver definition', () => {
     const params = {
       name: 'referenceMap',
       fieldType: 'collection',
@@ -158,7 +158,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a scalar X scalar map type definition', () => {
+  test('it should generate a scalar X scalar map resolver definition', () => {
     const params = {
       name: 'stringMap',
       fieldType: 'collection',
@@ -179,7 +179,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a scalar X embedded map type definition', () => {
+  test('it should generate a scalar X embedded map resolver definition', () => {
     const params = {
       name: 'embeddedMap',
       fieldType: 'collection',
@@ -200,7 +200,7 @@ describe('Generate field type definition', () => {
     expect(definition[0]).toEqual(expected)
   })
 
-  test('it should generate a reference X reference map type definition', () => {
+  test('it should generate a reference X reference map resolver definition', () => {
     const params = {
       name: 'refRefMap',
       fieldType: 'collection',
