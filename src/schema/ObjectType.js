@@ -24,7 +24,8 @@ import generateConnectionMutationFieldDefinitions from './codegen/connections/mu
 // import { queryDefinitions } from './defs/types/queries'
 // import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
 
-import { objectResolvers } from './defs/resolvers/objects'
+import generateResolverDefinitions from './codegen/object/resolvers/resolver'
+// import { objectResolvers } from './defs/resolvers/objects'
 import { connectionResolvers } from './defs/resolvers/connections'
 import { queryResolvers } from './defs/resolvers/queries'
 import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
@@ -279,15 +280,18 @@ export default class ObjectType {
    * @return The objects type definitions
    */
   typeResolvers(opts) {
+    const { name } = this
     const fields = this.fields
       .filter(field => !field.isScalar())
       .map(field => field.resolverDefinitions(opts))
-    return objectResolvers(opts, {
-      name: this.name,
-      type: this.type,
-      abstract: this.abstract,
-      fields: fields
+
+    const resolverDefinitions = generateResolverDefinitions(opts, {
+      name, fields,
     })
+
+    return [
+      resolverDefinitions,
+    ]
   }
 
   connectionResolvers(opts) {
