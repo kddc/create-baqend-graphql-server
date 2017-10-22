@@ -5,14 +5,16 @@ import Field from './Field'
 import { loaderDefinitions } from './defs/loaders/loaders'
 
 import generateTypeDefinitions from './codegen/object/type'
-import generateConnectionTypeDefinitions from './codegen/object/connections'
+import generateConnectionTypeDefinitions from './codegen/connections/connections'
 import generateFilterInputDefinitions from './codegen/object/filterInputs'
 import generateSortByInputDefinitions from './codegen/object/sortByInputs'
 import generateQueryFieldDefinitions from './codegen/object/queryFields'
+import generateInputDefinitions from './codegen/object/inputs'
+import generateConnectionInputDefinitions from './codegen/connections/connectionInputs'
 // import { connectionDefinitions } from './defs/types/connections'
-import { fieldConnectionInputDefinitions } from './defs/types/fields'
+// import { fieldConnectionInputDefinitions } from './defs/types/fields'
 // import { filterDefinitions } from './defs/types/filters'
-import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
+// import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
 import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
 // import { queryDefinitions } from './defs/types/queries'
 import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
@@ -160,24 +162,39 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the query field definitions
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   inputDefs(opts) {
-    const fieldInputDefs = this.fields
-      .map(field => fieldConnectionInputDefinitions(opts, field.props))
-    const objectInputDefs = !this.abstract && inputDefinitions(opts, {
+    const fieldConnectionInputDefinitions = this.fields
+      .map(field => field.connectionInputDefinitions(opts, field.props))
+
+    const inputDefinitions = generateInputDefinitions(opts, {
       name: this.name,
       type: this.type,
       abstract: this.abstract,
       embedded: this.embedded,
-      fields: flatten(this.fields.map(field => {
-        return field.inputDefs(opts)
-      }))
+      fields: flatten(this.fields.map(field => field.inputDefinitions(opts))),
     })
-    const connectionInputDefs = !(this.embedded || this.abstract) && connectionInputDefinitions(opts, {
+
+    const connectionInputDefinitions = generateConnectionInputDefinitions(opts, {
       name: this.name,
       type: this.type,
-      connections: this.connections
+      abstract: this.abstract,
+      embedded: this.embedded,
+      connections: this.connections,
     })
-    return [ fieldInputDefs, objectInputDefs, connectionInputDefs ]
+    return [
+      fieldConnectionInputDefinitions,
+      inputDefinitions,
+      connectionInputDefinitions,
+    ]
   }
 
   payloadDefs(opts) {
