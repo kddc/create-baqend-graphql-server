@@ -7,7 +7,7 @@ import { codeBlock } from 'common-tags'
  * @param args Input arguments for generating the code
  * @return The objects type definitions
  */
-const relay = ({ name, type, abstract }) => {
+const relay = ({ name, abstract }) => {
   const definitions = []
   if (!abstract) {
     definitions.push(codeBlock`
