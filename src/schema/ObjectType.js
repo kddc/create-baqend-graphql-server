@@ -28,12 +28,15 @@ import generateResolverDefinitions from './codegen/object/resolvers/resolver'
 import generateConnectionResolverDefinitions from './codegen/object/resolvers/connections'
 import generateQueryFieldResolverDefinitions from './codegen/object/resolvers/queryFields'
 import generateMutationFieldResolverDefinitions from './codegen/object/resolvers/mutationFields'
+import generatePayloadResolverDefinitions from './codegen/object/resolvers/payloads'
+
 import generateConnectionMutationFieldResolverDefinitions from './codegen/connections/resolvers/mutationFields'
+import generateConnectionPayloadResolverDefinitions from './codegen/connections/resolvers/payloads'
 // import { objectResolvers } from './defs/resolvers/objects'
 // import { connectionResolvers } from './defs/resolvers/connections'
 // import { queryResolvers } from './defs/resolvers/queries'
 // import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
-import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/payloads'
+// import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/payloads'
 
 export default class ObjectType {
   constructor(schemaObject) {
@@ -338,7 +341,7 @@ export default class ObjectType {
     const {
       name, type, abstract, embedded, connections,
     } = this
-    
+
     const mutationFieldResolverDefinitions = generateMutationFieldResolverDefinitions(opts, {
       name, type, abstract, embedded,
     })
@@ -353,25 +356,30 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the mutation payload resolvers
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   payloadResolvers(opts) {
-    const payloadResolverDefs = payloadResolvers(opts, {
-      name: this.name,
-      type: this.type,
-      abstract: this.abstract,
-      fields: this.fields
-        .filter(field => !field.isScalar())
-        .map(field => field.resolverDefinitions(opts))
-    })
-    const connectionPayloadResolverDefs = connectionPayloadResolvers(opts, {
-      name: this.name,
-      type: this.type,
-      abstract: this.abstract,
-      connections: this.connections,
-      fields: this.fields
-        .filter(field => !field.isScalar())
-        .map(field => field.resolverDefinitions(opts))
-    })
-    return [ payloadResolverDefs, connectionPayloadResolverDefs ]
-  }
+    const {
+      name, abstract, embedded, connections,
+    } = this
+    const fields = this.fields
+      .filter(field => !field.isScalar())
+      .map(field => field.resolverDefinitions(opts))
 
+    const payloadResolverDefinitions = generatePayloadResolverDefinitions(opts, {
+      name, fields,
+    })
+    const connectionPayloadResolverDefinitions = generateConnectionPayloadResolverDefinitions(opts, {
+      name, abstract, embedded, connections, fields,
+    })
+
+    return [
+      payloadResolverDefinitions,
+      connectionPayloadResolverDefinitions,
+    ]
+  }
 }
