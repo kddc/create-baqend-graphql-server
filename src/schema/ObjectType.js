@@ -8,12 +8,13 @@ import generateTypeDefinitions from './codegen/object/type'
 import generateConnectionTypeDefinitions from './codegen/object/connections'
 import generateFilterInputDefinitions from './codegen/object/filterInputs'
 import generateSortByInputDefinitions from './codegen/object/sortByInputs'
+import generateQueryFieldDefinitions from './codegen/object/queryFields'
 // import { connectionDefinitions } from './defs/types/connections'
 import { fieldConnectionInputDefinitions } from './defs/types/fields'
 // import { filterDefinitions } from './defs/types/filters'
 import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
 import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
-import { queryDefinitions } from './defs/types/queries'
+// import { queryDefinitions } from './defs/types/queries'
 import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
 
 import { objectResolvers } from './defs/resolvers/objects'
@@ -139,10 +140,24 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the query field definitions
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   queryDefs(opts) {
-    const name = this.name
-    const type = this.type
-    return !(this.embedded || this.abstract) && queryDefinitions(opts, { name, type })
+    const queryFieldDefinitions = generateQueryFieldDefinitions(opts, {
+      name: this.name,
+      abstract: this.abstract,
+      embedded: this.embedded,
+    })
+    return [
+      queryFieldDefinitions,
+    ]
   }
 
   inputDefs(opts) {
