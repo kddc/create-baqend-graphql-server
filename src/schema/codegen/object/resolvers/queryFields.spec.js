@@ -1,9 +1,6 @@
 import { codeBlock } from 'common-tags'
 import generateQueryFieldResolverDefinitions from './queryFields'
 
-const parentFields = ['id: IDFilter']
-const fields = ['string: StringFilter']
-
 describe('Generate object query field definitions', () => {
   test('it should generate no query fields definitions for abstract or embedded types', () => {
     const abstractParams = {
