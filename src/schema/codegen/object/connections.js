@@ -20,7 +20,7 @@ const relay = ({ name, type, abstract }) => {
     definitions.push(codeBlock`
       type ${name}Edge {
         cursor: String!
-        node: ${type}
+        node: ${name}
       }
     `)
   }
