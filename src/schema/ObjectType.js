@@ -5,17 +5,20 @@ import Field from './Field'
 import { loaderDefinitions } from './defs/loaders/loaders'
 
 import generateTypeDefinitions from './codegen/object/type'
-import generateConnectionTypeDefinitions from './codegen/connections/connections'
 import generateFilterInputDefinitions from './codegen/object/filterInputs'
 import generateSortByInputDefinitions from './codegen/object/sortByInputs'
 import generateQueryFieldDefinitions from './codegen/object/queryFields'
 import generateInputDefinitions from './codegen/object/inputs'
+import generatePayloadDefinitions from './codegen/object/payloads'
+
+import generateConnectionTypeDefinitions from './codegen/connections/connections'
 import generateConnectionInputDefinitions from './codegen/connections/connectionInputs'
+import generateConnectionPayloadDefinitions from './codegen/connections/payloads'
 // import { connectionDefinitions } from './defs/types/connections'
 // import { fieldConnectionInputDefinitions } from './defs/types/fields'
 // import { filterDefinitions } from './defs/types/filters'
 // import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
-import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
+// import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
 // import { queryDefinitions } from './defs/types/queries'
 import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
 
@@ -78,6 +81,7 @@ export default class ObjectType {
       parentFields,
       fields,
     })
+
     return [
       typeDefinitions,
     ]
@@ -102,6 +106,7 @@ export default class ObjectType {
       type: this.type,
       abstract: this.abstract,
     })
+
     return [
       fieldConnectionDefinitions,
       connectionDefinitions,
@@ -120,6 +125,7 @@ export default class ObjectType {
    */
   filterDefs(opts) {
     const { name, abstract } = this
+
     const filterInputDefinitions = generateFilterInputDefinitions(opts, {
       name,
       abstract,
@@ -128,6 +134,7 @@ export default class ObjectType {
       fields: this.fields
         .map(field => field.filterInputDefinitions(opts)),
     })
+
     const sortByInputDefinitions = generateSortByInputDefinitions(opts, {
       name,
       abstract,
@@ -136,6 +143,7 @@ export default class ObjectType {
       fields: this.fields
         .map(field => field.sortByInputDefinitions(opts)),
     })
+
     return [
       filterInputDefinitions,
       sortByInputDefinitions,
@@ -157,6 +165,7 @@ export default class ObjectType {
       abstract: this.abstract,
       embedded: this.embedded,
     })
+
     return [
       queryFieldDefinitions,
     ]
@@ -190,6 +199,7 @@ export default class ObjectType {
       embedded: this.embedded,
       connections: this.connections,
     })
+
     return [
       fieldConnectionInputDefinitions,
       inputDefinitions,
@@ -197,29 +207,36 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the payload type definitions
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   payloadDefs(opts) {
-    const objectPayloadDefs = !(this.embedded || this.abstract) && payloadDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-      parentFields: flatten(this.parentFields.map(field => {
-        return field.typeDefinitions(opts)
-      })),
-      fields: flatten(this.fields.map(field => {
-        return field.typeDefinitions(opts)
-      }))
+    const {
+      name, type, abstract, embedded, connections,
+    } = this
+    const parentFields = flatten(this.parentFields
+      .map(field => field.typeDefinitions(opts)))
+    const fields = flatten(this.fields
+      .map(field => field.typeDefinitions(opts)))
+
+    const payloadDefinitions = generatePayloadDefinitions(opts, {
+      name, type, abstract, embedded, parentFields, fields,
     })
-    const connectionPayloadDefs = !(this.embedded || this.abstract) && connectionPayloadDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-      connections: this.connections,
-      parentFields: flatten(this.parentFields.map(field => {
-        return field.typeDefinitions(opts)
-      })),
-      fields: flatten(this.fields.map(field => {
-        return field.typeDefinitions(opts)
-      }))
+
+    const connectionPayloadDefs = generateConnectionPayloadDefinitions(opts, {
+      name, type, abstract, embedded, connections, parentFields, fields,
     })
-    return [ objectPayloadDefs, connectionPayloadDefs ]
+
+    return [
+      payloadDefinitions,
+      connectionPayloadDefs,
+    ]
   }
 
   mutationDefs(opts) {
