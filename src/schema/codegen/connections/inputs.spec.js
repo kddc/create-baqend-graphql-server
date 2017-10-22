@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import generateConnectionInputDefinitions, { generateConnectionInputDefinition } from './connectionInputs'
+import generateConnectionInputDefinitions, { generateConnectionInputDefinition } from './inputs'
 
 const connections = {
   referenceList: {
