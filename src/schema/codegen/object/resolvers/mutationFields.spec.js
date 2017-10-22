@@ -1,5 +1,5 @@
 import { codeBlock } from 'common-tags'
-import generateMutationFieldDefinitions from './mutationFields'
+import generateMutationFieldResolverDefinitions from './mutationFields'
 
 
 describe('Generate object query field definitions', () => {
@@ -10,7 +10,7 @@ describe('Generate object query field definitions', () => {
       embedded: false,
     }
     const abstractExpected = []
-    const abstractDefinitions = generateMutationFieldDefinitions({}, abstractParams)
+    const abstractDefinitions = generateMutationFieldResolverDefinitions({}, abstractParams)
     expect(abstractDefinitions.length).toBe(0)
     expect(abstractDefinitions).toEqual(abstractExpected)
 
@@ -20,7 +20,7 @@ describe('Generate object query field definitions', () => {
       embedded: true,
     }
     const embeddedExpected = []
-    const embeddedDefinitions = generateMutationFieldDefinitions({}, embeddedParams)
+    const embeddedDefinitions = generateMutationFieldResolverDefinitions({}, embeddedParams)
     expect(embeddedDefinitions.length).toBe(0)
     expect(embeddedDefinitions).toEqual(embeddedExpected)
   })
@@ -33,14 +33,20 @@ describe('Generate object query field definitions', () => {
     }
     const expected = [
       codeBlock`
-        createTestObject(input: CreateTestObjectInput): CreateTestObjectPayload
+        createTestObject: (root, args, { baqendMutator }) => {
+          return baqendMutator.createEntity('TestObject', args, {})
+        }
       `, codeBlock`
-        updateTestObject(input: UpdateTestObjectInput): UpdateTestObjectPayload
+        updateTestObject: (root, args, { baqendMutator }) => {
+          return baqendMutator.updateEntity('TestObject', args, {})
+        }
       `, codeBlock`
-        deleteTestObject(input: DeleteTestObjectInput): DeleteTestObjectPayload
+        deleteTestObject: (root, args, { baqendMutator }) => {
+          return baqendMutator.deleteEntity('TestObject', args, {})
+        }
       `,
     ]
-    const definitions = generateMutationFieldDefinitions({}, params)
+    const definitions = generateMutationFieldResolverDefinitions({}, params)
     expect(definitions.length).toBe(3)
     expect(definitions[0]).toEqual(expected[0])
     expect(definitions[1]).toEqual(expected[1])

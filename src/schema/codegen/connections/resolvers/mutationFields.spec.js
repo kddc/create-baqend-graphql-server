@@ -1,9 +1,7 @@
 import { codeBlock } from 'common-tags'
-import generateConnectionMutationFieldDefinitions, {
-  generateConnectionMutationFieldDefinition,
+import generateConnectionMutationFieldResolverDefinitions, {
+  generateConnectionMutationFieldResolverDefinition,
 } from './mutationFields'
-
-const ucfirst = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 const connections = {
   referenceList: {
@@ -52,10 +50,19 @@ const connections = {
   },
 }
 
-describe('Generate object connection mutation field definitions', () => {
-  test('it should generate no connection mutation field definitions for abstract or embedded types', () => {
+describe('Generate object connection mutation field resolver definitions', () => {
+  test('it should not fail for empty connection lists', () => {
+    const definitions = generateConnectionMutationFieldResolverDefinitions({}, {
+      name: 'TestObject',
+      abstract: true,
+      embedded: false,
+      connections: undefined,
+    })
+    expect(definitions.length).toBe(0)
+  })
+  test('it should generate no connection mutation field resolver definitions for abstract or embedded types', () => {
     const expected = []
-    const abstractDefinitions = generateConnectionMutationFieldDefinitions({}, {
+    const abstractDefinitions = generateConnectionMutationFieldResolverDefinitions({}, {
       name: 'TestObject',
       abstract: true,
       embedded: false,
@@ -64,7 +71,7 @@ describe('Generate object connection mutation field definitions', () => {
     expect(abstractDefinitions.length).toBe(0)
     expect(abstractDefinitions).toEqual(expected)
 
-    const embeddedDefinitions = generateConnectionMutationFieldDefinitions({}, {
+    const embeddedDefinitions = generateConnectionMutationFieldResolverDefinitions({}, {
       name: 'TestObject',
       abstract: true,
       embedded: false,
@@ -74,7 +81,7 @@ describe('Generate object connection mutation field definitions', () => {
     expect(embeddedDefinitions).toEqual(expected)
   })
 
-  test('it should generate connection mutation field definitions for reference list or set', () => {
+  test('it should generate connection mutation field resolver definitions for reference list or set', () => {
     // referenceList: {
     //   name: 'referenceList',
     //   collectionType: 'List',
@@ -85,18 +92,20 @@ describe('Generate object connection mutation field definitions', () => {
     //     },
     //   ],
     // },
-    const definitions = generateConnectionMutationFieldDefinition({}, {
+    const definitions = generateConnectionMutationFieldResolverDefinition({}, {
       name: 'TestObject',
       connection: connections.referenceList,
     })
-    const addEntityName = 'addTestReferenceToTestObjectReferenceList'
-    const removeEntityName = 'removeTestReferenceFromTestObjectReferenceList'
     const expected = [
       codeBlock`
-        ${addEntityName}(input: ${ucfirst(addEntityName)}Input): ${ucfirst(addEntityName)}Payload
+        addTestReferenceToTestObjectReferenceList: (root, args, { baqendMutator }) => {
+          return baqendMutator.addEntryToCollection('TestObject', 'referenceList', args, {})
+        }
       `,
       codeBlock`
-        ${removeEntityName}(input: ${ucfirst(removeEntityName)}Input): ${ucfirst(removeEntityName)}Payload
+        removeTestReferenceFromTestObjectReferenceList: (root, args, { baqendMutator }) => {
+          return baqendMutator.removeEntryFromCollection('TestObject', 'referenceList', args, {})
+        }
       `,
     ]
     expect(definitions.length).toBe(2)
@@ -104,7 +113,7 @@ describe('Generate object connection mutation field definitions', () => {
     expect(definitions[1]).toEqual(expected[1])
   })
 
-  test('it should generate connection mutation field definitions for string list or set', () => {
+  test('it should generate connection mutation field resolver definitions for string list or set', () => {
     // stringList: {
     //   name: 'stringList',
     //   collectionType: 'List',
@@ -115,18 +124,20 @@ describe('Generate object connection mutation field definitions', () => {
     //     },
     //   ],
     // },
-    const definitions = generateConnectionMutationFieldDefinition({}, {
+    const definitions = generateConnectionMutationFieldResolverDefinition({}, {
       name: 'TestObject',
       connection: connections.stringList,
     })
-    const addEntityName = 'addStringToTestObjectStringList'
-    const removeEntityName = 'removeStringFromTestObjectStringList'
     const expected = [
       codeBlock`
-        ${addEntityName}(input: ${ucfirst(addEntityName)}Input): ${ucfirst(addEntityName)}Payload
+        addStringToTestObjectStringList: (root, args, { baqendMutator }) => {
+          return baqendMutator.addEntryToCollection('TestObject', 'stringList', args, {})
+        }
       `,
       codeBlock`
-        ${removeEntityName}(input: ${ucfirst(removeEntityName)}Input): ${ucfirst(removeEntityName)}Payload
+        removeStringFromTestObjectStringList: (root, args, { baqendMutator }) => {
+          return baqendMutator.removeEntryFromCollection('TestObject', 'stringList', args, {})
+        }
       `,
     ]
     expect(definitions.length).toBe(2)
@@ -134,7 +145,7 @@ describe('Generate object connection mutation field definitions', () => {
     expect(definitions[1]).toEqual(expected[1])
   })
 
-  test('it should generate connection mutation field definitions for embedded list', () => {
+  test('it should generate connection mutation field resolver definitions for embedded list', () => {
     // embeddedList: {
     //   name: 'embeddedList',
     //   collectionType: 'List',
@@ -145,18 +156,20 @@ describe('Generate object connection mutation field definitions', () => {
     //     },
     //   ],
     // },
-    const definitions = generateConnectionMutationFieldDefinition({}, {
+    const definitions = generateConnectionMutationFieldResolverDefinition({}, {
       name: 'TestObject',
       connection: connections.embeddedList,
     })
-    const addEntityName = 'addEmbeddedToTestObjectEmbeddedList'
-    const removeEntityName = 'removeEmbeddedFromTestObjectEmbeddedList'
     const expected = [
       codeBlock`
-        ${addEntityName}(input: ${ucfirst(addEntityName)}Input): ${ucfirst(addEntityName)}Payload
+        addEmbeddedToTestObjectEmbeddedList: (root, args, { baqendMutator }) => {
+          return baqendMutator.addEntryToCollection('TestObject', 'embeddedList', args, {})
+        }
       `,
       codeBlock`
-        ${removeEntityName}(input: ${ucfirst(removeEntityName)}Input): ${ucfirst(removeEntityName)}Payload
+        removeEmbeddedFromTestObjectEmbeddedList: (root, args, { baqendMutator }) => {
+          return baqendMutator.removeEntryFromCollection('TestObject', 'embeddedList', args, {})
+        }
       `,
     ]
     expect(definitions.length).toBe(2)
@@ -164,7 +177,7 @@ describe('Generate object connection mutation field definitions', () => {
     expect(definitions[1]).toEqual(expected[1])
   })
 
-  test('it should generate connection mutation field definitions for map', () => {
+  test('it should generate connection mutation field resolver definitions for map', () => {
     // referenceMap: {
     //   name: 'referenceMap',
     //   collectionType: 'Map',
@@ -179,18 +192,20 @@ describe('Generate object connection mutation field definitions', () => {
     //     },
     //   ],
     // },
-    const definitions = generateConnectionMutationFieldDefinition({}, {
+    const definitions = generateConnectionMutationFieldResolverDefinition({}, {
       name: 'TestObject',
       connection: connections.referenceMap,
     })
-    const addEntityName = 'addEntryToTestObjectReferenceMap'
-    const removeEntityName = 'removeEntryFromTestObjectReferenceMap'
     const expected = [
       codeBlock`
-        ${addEntityName}(input: ${ucfirst(addEntityName)}Input): ${ucfirst(addEntityName)}Payload
+        addEntryToTestObjectReferenceMap: (root, args, { baqendMutator }) => {
+          return baqendMutator.addEntryToCollection('TestObject', 'referenceMap', args, {})
+        }
       `,
       codeBlock`
-        ${removeEntityName}(input: ${ucfirst(removeEntityName)}Input): ${ucfirst(removeEntityName)}Payload
+        removeEntryFromTestObjectReferenceMap: (root, args, { baqendMutator }) => {
+          return baqendMutator.removeEntryFromCollection('TestObject', 'referenceMap', args, {})
+        }
       `,
     ]
     expect(definitions.length).toBe(2)

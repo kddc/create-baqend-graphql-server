@@ -27,10 +27,12 @@ import generateConnectionMutationFieldDefinitions from './codegen/connections/mu
 import generateResolverDefinitions from './codegen/object/resolvers/resolver'
 import generateConnectionResolverDefinitions from './codegen/object/resolvers/connections'
 import generateQueryFieldResolverDefinitions from './codegen/object/resolvers/queryFields'
+import generateMutationFieldResolverDefinitions from './codegen/object/resolvers/mutationFields'
+import generateConnectionMutationFieldResolverDefinitions from './codegen/connections/resolvers/mutationFields'
 // import { objectResolvers } from './defs/resolvers/objects'
 // import { connectionResolvers } from './defs/resolvers/connections'
 // import { queryResolvers } from './defs/resolvers/queries'
-import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
+// import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
 import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/payloads'
 
 export default class ObjectType {
@@ -326,6 +328,31 @@ export default class ObjectType {
     })
   }
 
+  /**
+   * Generates the mutation field resolvers
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
+  mutationResolvers(opts) {
+    const {
+      name, type, abstract, embedded, connections,
+    } = this
+    
+    const mutationFieldResolverDefinitions = generateMutationFieldResolverDefinitions(opts, {
+      name, type, abstract, embedded,
+    })
+
+    const connectionMutationFieldResolverDefinitions = generateConnectionMutationFieldResolverDefinitions(opts, {
+      name, type, abstract, embedded, connections,
+    })
+
+    return [
+      mutationFieldResolverDefinitions,
+      connectionMutationFieldResolverDefinitions,
+    ]
+  }
+
   payloadResolvers(opts) {
     const payloadResolverDefs = payloadResolvers(opts, {
       name: this.name,
@@ -345,18 +372,6 @@ export default class ObjectType {
         .map(field => field.resolverDefinitions(opts))
     })
     return [ payloadResolverDefs, connectionPayloadResolverDefs ]
-  }
-
-  mutationResolvers(opts) {
-    const name = this.name
-    const type = this.type
-    const objectMutationResolverDefs = !(this.embedded || this.abstract) && mutationResolvers(opts, { name, type })
-    const connectionMutationResolversDefs = !(this.embedded || this.abstract) && connectionMutationResolvers(opts, {
-      name,
-      type,
-      connections: this.connections
-    })
-    return [ objectMutationResolverDefs, connectionMutationResolversDefs ]
   }
 
 }
