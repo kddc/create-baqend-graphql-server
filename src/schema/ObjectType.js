@@ -26,9 +26,10 @@ import generateConnectionMutationFieldDefinitions from './codegen/connections/mu
 
 import generateResolverDefinitions from './codegen/object/resolvers/resolver'
 import generateConnectionResolverDefinitions from './codegen/object/resolvers/connections'
+import generateQueryFieldResolverDefinitions from './codegen/object/resolvers/queryFields'
 // import { objectResolvers } from './defs/resolvers/objects'
 // import { connectionResolvers } from './defs/resolvers/connections'
-import { queryResolvers } from './defs/resolvers/queries'
+// import { queryResolvers } from './defs/resolvers/queries'
 import { mutationResolvers, connectionMutationResolvers } from './defs/resolvers/mutations'
 import { payloadResolvers, connectionPayloadResolvers } from './defs/resolvers/payloads'
 
@@ -296,10 +297,7 @@ export default class ObjectType {
   }
 
   /**
-   * Generates the object resolvers
-   *
-   * ${name}(args): ${name}
-   * all${name}s(args): ${name}Connection
+   * Generates the object connection resolvers
    *
    * @param opts Some options to pass to the generator
    * @return The objects type definitions
@@ -315,10 +313,17 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the query field resolvers
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   queryResolvers(opts) {
-    const name = this.name
-    const type = this.type
-    return !(this.embedded || this.abstract) && queryResolvers(opts, { name, type })
+    const { name, abstract, embedded } = this
+    return generateQueryFieldResolverDefinitions(opts, {
+      name, abstract, embedded,
+    })
   }
 
   payloadResolvers(opts) {
