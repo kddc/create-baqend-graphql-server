@@ -5,7 +5,7 @@ import generateFieldFilterInputDefinitions from './codegen/field/filterInputs'
 import generateFieldSortByInputDefinitions from './codegen/field/sortByInputs'
 import generateFieldConnectionInputDefinitions from './codegen/field/connectionInputs'
 // import { fieldInputDefinitions } from './defs/types/fields'
-import { fieldResolvers } from './defs/resolvers/fields'
+import generateFieldResolverDefinitions from './codegen/field/resolvers/resolver'
 
 /**
 * field name (posts, author, ...)
@@ -45,15 +45,15 @@ export default class Field {
     return generateFieldSortByInputDefinitions(opts, this.props)
   }
 
-  connectionInputDefinitions(opts) {
-    return generateFieldConnectionInputDefinitions(opts, this.props)
-  }
-
   inputDefinitions(opts) {
     return generateFieldInputDefinitions(opts, this.props)
   }
 
-  resolvers(opts) {
-    return fieldResolvers(opts, this.props)
+  connectionInputDefinitions(opts) {
+    return generateFieldConnectionInputDefinitions(opts, this.props)
+  }
+
+  resolverDefinitions(opts) {
+    return generateFieldResolverDefinitions(opts, this.props)
   }
 }

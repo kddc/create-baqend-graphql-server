@@ -269,10 +269,19 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the object resolvers
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   typeResolvers(opts) {
     const fields = this.fields
       .filter(field => !field.isScalar())
-      .map(field => field.resolvers(opts))
+      .map(field => field.resolverDefinitions(opts))
     return objectResolvers(opts, {
       name: this.name,
       type: this.type,
@@ -301,7 +310,7 @@ export default class ObjectType {
       abstract: this.abstract,
       fields: this.fields
         .filter(field => !field.isScalar())
-        .map(field => field.resolvers(opts))
+        .map(field => field.resolverDefinitions(opts))
     })
     const connectionPayloadResolverDefs = connectionPayloadResolvers(opts, {
       name: this.name,
@@ -310,7 +319,7 @@ export default class ObjectType {
       connections: this.connections,
       fields: this.fields
         .filter(field => !field.isScalar())
-        .map(field => field.resolvers(opts))
+        .map(field => field.resolverDefinitions(opts))
     })
     return [ payloadResolverDefs, connectionPayloadResolverDefs ]
   }
