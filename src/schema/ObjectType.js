@@ -10,17 +10,19 @@ import generateSortByInputDefinitions from './codegen/object/sortByInputs'
 import generateQueryFieldDefinitions from './codegen/object/queryFields'
 import generateInputDefinitions from './codegen/object/inputs'
 import generatePayloadDefinitions from './codegen/object/payloads'
+import generateMutationFieldDefinitions from './codegen/object/mutationFields'
 
 import generateConnectionTypeDefinitions from './codegen/connections/connections'
 import generateConnectionInputDefinitions from './codegen/connections/connectionInputs'
 import generateConnectionPayloadDefinitions from './codegen/connections/payloads'
+import generateConnectionMutationFieldDefinitions from './codegen/connections/mutationFields'
 // import { connectionDefinitions } from './defs/types/connections'
 // import { fieldConnectionInputDefinitions } from './defs/types/fields'
 // import { filterDefinitions } from './defs/types/filters'
 // import { inputDefinitions, connectionInputDefinitions } from './defs/types/inputs'
 // import { payloadDefinitions, connectionPayloadDefinitions } from './defs/types/payloads'
 // import { queryDefinitions } from './defs/types/queries'
-import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
+// import { mutationDefinitions, connectionMutationDefinitions } from './defs/types/mutations'
 
 import { objectResolvers } from './defs/resolvers/objects'
 import { connectionResolvers } from './defs/resolvers/connections'
@@ -239,19 +241,32 @@ export default class ObjectType {
     ]
   }
 
+  /**
+   * Generates the mutation field definitions
+   *
+   * ${name}(args): ${name}
+   * all${name}s(args): ${name}Connection
+   *
+   * @param opts Some options to pass to the generator
+   * @return The objects type definitions
+   */
   mutationDefs(opts) {
-    return !(this.embedded || this.abstract) && mutationDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-    })
-  }
+    const {
+      name, type, abstract, embedded, connections,
+    } = this
 
-  connectionMutationDefs(opts) {
-    return !(this.embedded || this.abstract) && connectionMutationDefinitions(opts, {
-      name: this.name,
-      type: this.type,
-      connections: this.connections
+    const mutationDefinitions = generateMutationFieldDefinitions(opts, {
+      name, type, abstract, embedded,
     })
+
+    const connectionMutationDefinitions = generateConnectionMutationFieldDefinitions(opts, {
+      name, type, abstract, embedded, connections,
+    })
+
+    return [
+      mutationDefinitions,
+      connectionMutationDefinitions,
+    ]
   }
 
   typeResolvers(opts) {

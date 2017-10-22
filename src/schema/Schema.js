@@ -71,9 +71,6 @@ export default class SchemaTypes {
       this.types.map(type => {
         return type.mutationDefs(this.opts)
       }),
-      this.types.map(type => {
-        return type.connectionMutationDefs(this.opts)
-      })
     ])
 
     return { defs, queryDefs, mutationDefs }
