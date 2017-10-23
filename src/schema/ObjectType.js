@@ -2,7 +2,7 @@ import flatten from '../util/flatten'
 
 import Field from './Field'
 
-import { loaderDefinitions } from './defs/loaders/loaders'
+import generateLoaderDefinitions from './codegen/object/loaders/type'
 
 import generateTypeDefinitions from './codegen/object/type'
 import generateConnectionTypeDefinitions from './codegen/object/connections'
@@ -59,11 +59,11 @@ export default class ObjectType {
    * @return The objects loader definitions
    */
   loader(opts) {
-    const { name } = this
-    if (!(this.embedded || this.abstract)) {
-      return loaderDefinitions(opts, { name })
-    }
-    return null
+    const { name, embedded, abstract } = this
+    const loaderDefinitions = generateLoaderDefinitions(opts, { name, abstract, embedded })
+    return [
+      loaderDefinitions,
+    ]
   }
 
   /**
