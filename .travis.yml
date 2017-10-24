@@ -10,7 +10,6 @@ services:
 before_install:
   - docker-compose build
   - docker-compose up -d
-  - docker-compose ps
 
 script:
   - yarn install
