@@ -24,7 +24,8 @@ export default class FieldParser {
   }
 
 
-  parseField({ name, type, flags }) {
+  parseField(field) {
+    const { name, type, flags } = field
     const fieldType = this.getFieldType({ type })
     const elementType = this.parseType({ name, type })
     const readOnly = FieldParser.isReadOnly({ flags })
