@@ -5,7 +5,8 @@ import generateGraphQLDefs from '../../index'
 const host = 'http://127.0.0.1:8080/v1'
 
 const setupDatabase = () => {
-  let emf = new baqend.EntityManagerFactory({ host })
+  const emf = new baqend.EntityManagerFactory({ host })
+  /* eslint-disable */
   return emf.createEntityManager(true).ready().then((em) => {
     return em.User.login('root', 'root').then(() => {
       return em.send(new em.message.ReplaceAllSchemas(schema))
@@ -13,6 +14,7 @@ const setupDatabase = () => {
   }).then((schema) => {
     return new Promise((resolve) => setTimeout(() => resolve(), 1000))
   })
+  /* eslint-enable */
 }
 
 const setupGraphQL = () => {
