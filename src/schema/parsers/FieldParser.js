@@ -1,66 +1,117 @@
 export const Primitives = [
-  "String",
-  "Integer",
-  "Double",
-  "Boolean",
-  "DateTime",
-  "Date",
-  "Time",
-  "File",
-  "GeoPoint",
-  "JsonObject",
-  "JsonArray"
+  'String',
+  'Integer',
+  'Double',
+  'Boolean',
+  'DateTime',
+  'Date',
+  'Time',
+  'File',
+  'GeoPoint',
+  'JsonObject',
+  'JsonArray',
 ]
 
 export const Collections = [
-  "collection.List",
-  "collection.Set",
-  "collection.Map"
+  'collection.List',
+  'collection.Set',
+  'collection.Map',
 ]
 
 export default class FieldParser {
-  static getSuperType(baqendType) {
-    return baqendType.replace(new RegExp('(\\/db\\/|\\[.*\\])', 'ig'), '')
+  constructor(types) {
+    this.types = types
   }
 
-  static getType(baqendType) {
-    if(this.isCollection(baqendType)) {
-      const baqendTypes = baqendType.match(new RegExp('\\[.*\\]', 'ig'))[0].replace(/(\[|\])/g,'').split(',')
-      return baqendTypes.map(type => {
-        return type.replace(new RegExp('\\/db\\/', 'i'), '')
-      })
+
+  parseField({ name, type, flags }) {
+    const fieldType = this.getFieldType({ type })
+    const elementType = this.parseType({ name, type })
+    const readOnly = FieldParser.isReadOnly({ flags })
+    return {
+      name,
+      fieldType,
+      elementType,
+      readOnly,
     }
-    return baqendType.replace(new RegExp('\\/db\\/', 'i'), '')
   }
 
-  static isPrimitive(baqendType) {
-    const type = this.getSuperType(baqendType)
-    return !!type.match(new RegExp('^(' + Primitives.join('|') + ')$','i'))
+  getFieldType({ type }) {
+    if (FieldParser.isPrimitive({ type })) {
+      return 'scalar'
+    } else if (FieldParser.isCollection({ type })) {
+      return 'collection'
+    } else if (this.isReference({ type })) {
+      return 'reference'
+    } else if (this.isEmbedded({ type })) {
+      return 'embedded'
+    }
+    return null
   }
 
-  static isCollection(baqendType) {
-    const type = this.getSuperType(baqendType)
-    return !!type.match(new RegExp('^(' + Collections.join('|') + ')$','i'))
+  parseType({ name, type }) {
+    if (FieldParser.isPrimitive({ type })) {
+      return FieldParser.parseScalarType({ name, type })
+    } else if (this.isReference({ type }) || this.isEmbedded({ type })) {
+      return FieldParser.parseObjectType({ type })
+    } else if (FieldParser.isCollection({ type })) {
+      return this.parseCollectionType({ type })
+    }
+    return null
   }
 
-  static mapPrimitiveToScalar(baqendType) {
-    const type = this.getSuperType(baqendType)
-    switch(type) {
-      case "String":
-        return "String"
-      case "Integer":
-        return "Int"
-      case "Double":
-        return "Float"
-      case "Boolean":
-        return "Boolean"
-      case "DateTime":
-      case "Date":
-      case "Time":
-        return "Date"
-      case "JsonObject":
-      case "JsonArray":
-        return "JSON"
+  parseCollectionType({ type }) {
+    const collectionType = type.replace(new RegExp('\\[.*\\]', 'i'), '').split('.')[1]
+    const types = type.match(new RegExp('\\[.*\\]', 'ig'))[0].replace(/(\[|\])/g, '').split(',').map((elementType) => {
+      const collectionElementType = elementType.replace(new RegExp('\\/db\\/', 'i'), '')
+      return {
+        fieldType: this.getFieldType({ type: collectionElementType }),
+        elementType: this.parseType({ type: collectionElementType }),
+      }
+    })
+    return {
+      collectionType,
+      types,
+    }
+  }
+
+  isReference({ type }) {
+    return !!type.match(new RegExp(`^(${this.types.reference.join('|')})$`, 'i'))
+  }
+
+  isEmbedded({ type }) {
+    return !!type.match(new RegExp(`^(${this.types.embedded.join('|')})$`, 'i'))
+  }
+
+  static isPrimitive({ type }) {
+    return !!type.match(new RegExp(`^(${Primitives.join('|')})$`, 'i'))
+  }
+
+  static isCollection({ type }) {
+    return !!type.match(new RegExp(`^(${Collections.join('|')})\\[.*\\]$`, 'i'))
+  }
+
+  static parseScalarType({ name, type }) {
+    if (name && name === 'id') {
+      return 'ID'
+    }
+    switch (type.replace(new RegExp('\\[.*\\]', 'ig'), '')) {
+      case 'GeoPoint':
+      case 'String':
+        return 'String'
+      case 'Integer':
+        return 'Int'
+      case 'Double':
+        return 'Float'
+      case 'Boolean':
+        return 'Boolean'
+      case 'DateTime':
+      case 'Date':
+      case 'Time':
+        return 'Date'
+      case 'JsonObject':
+      case 'JsonArray':
+        return 'JSON'
       default:
         return null
       // "File",
@@ -68,25 +119,11 @@ export default class FieldParser {
     }
   }
 
-  static parseType(baqendType) {
-    if (this.isPrimitive(baqendType)) {
-      return {
-        "superType": "scalar",
-        "type": this.mapPrimitiveToScalar(baqendType)
-      }
-    } else if (this.isCollection(baqendType)) {
-      const type = this.getType(baqendType)
-      const entryType = type[1] || type[0]
-      return {
-        "superType": "collection",
-        "entryType": this.isPrimitive(entryType) && "scalar" || "object",
-        "collectionType": this.getSuperType(baqendType).split('.')[1],
-        "type": type
-      }
-    }
-    return {
-      "superType": "object",
-      "type": this.getType(baqendType)
-    }
+  static parseObjectType({ type }) {
+    return type.replace(new RegExp('\\[.*\\]', 'i'), '')
+  }
+
+  static isReadOnly({ flags }) {
+    return (flags && !!(flags.filter(flag => flag === 'READONLY').length)) || false
   }
 }

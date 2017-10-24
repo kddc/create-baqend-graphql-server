@@ -5,7 +5,7 @@ const generateTypes = (opts, args) => {
   return codeBlock`
     let typeDefs = \`
       ${defs.join('\n')}
-      type Query {
+      extend type Query {
         ${queryDefs.join('\n')}
       }
       type Mutation {
@@ -17,5 +17,5 @@ const generateTypes = (opts, args) => {
 }
 
 export {
-  generateTypes
+  generateTypes,
 }

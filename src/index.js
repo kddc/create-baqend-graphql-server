@@ -20,13 +20,14 @@ const deleteImports = (input) => {
 const start = async (args) => {
   const dest = args.dest || 'server'
   if(!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
+  if(!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
+  if(!IOService.fileExists(`${dest}/schema/generated`)) IOService.mkDir(`${dest}/schema/generated`)
   if (!args.schema) {
-    if(!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
     if(!IOService.fileExists(`${dest}/util`)) IOService.mkDir(`${dest}/util`)
-    if(!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
     if(!IOService.fileExists(`${dest}/codegen`)) IOService.mkDir(`${dest}/codegen`)
-    if(!IOService.fileExists(`${dest}/schema/generated`)) IOService.mkDir(`${dest}/schema/generated`)
-    if(!IOService.fileExists(`${dest}/schema/baqend`)) IOService.mkDir(`${dest}/schema/baqend`)
+    if(!IOService.fileExists(`${dest}/schema/base`)) IOService.mkDir(`${dest}/schema/base`)
+    if(!IOService.fileExists(`${dest}/schema/scalars`)) IOService.mkDir(`${dest}/schema/scalars`)
+    if(!IOService.fileExists(`${dest}/schema/filters`)) IOService.mkDir(`${dest}/schema/filters`)
     if(!IOService.fileExists(`${dest}/schema/custom`)) IOService.mkDir(`${dest}/schema/custom`)
 
     IOService.copyFile(`src/server/index.js`, `${dest}/index.js`)
@@ -42,14 +43,19 @@ const start = async (args) => {
 
     IOService.copyFile(`src/server/codegen/bundle.js`, `${dest}/codegen/bundle.js`)
 
-    IOService.copyFile(`src/server/types/types.js`, `${dest}/schema/baqend/types.js`)
-    IOService.copyFile(`src/server/types/resolvers.js`, `${dest}/schema/baqend/resolvers.js`)
+    IOService.copyFile(`src/schema/defs/relay/typeDefs.js`, `${dest}/schema/base/typeDefs.js`)
+    IOService.copyFile(`src/schema/defs/relay/resolvers.js`, `${dest}/schema/base/resolvers.js`)
 
-    if(!IOService.fileExists(`${dest}/schema/custom/types.js`)) {
-      IOService.copyFile(`src/server/custom/types.js`, `${dest}/schema/custom/types.js`)
+    IOService.copyFile(`src/schema/defs/scalars/typeDefs.js`, `${dest}/schema/scalars/typeDefs.js`)
+    IOService.copyFile(`src/schema/defs/scalars/resolvers.js`, `${dest}/schema/scalars/resolvers.js`)
+
+    IOService.copyFile(`src/schema/defs/filters/typeDefs.js`, `${dest}/schema/filters/typeDefs.js`)
+
+    if(!IOService.fileExists(`${dest}/schema/custom/typeDefs.js`)) {
+      IOService.copyFile(`src/schema/defs/custom/typeDefs.js`, `${dest}/schema/custom/typeDefs.js`)
     }
     if(!IOService.fileExists(`${dest}/schema/custom/resolvers.js`)) {
-      IOService.copyFile(`src/server/custom/resolvers.js`, `${dest}/schema/custom/resolvers.js`)
+      IOService.copyFile(`src/schema/defs/custom/resolvers.js`, `${dest}/schema/custom/resolvers.js`)
     }
   }
 

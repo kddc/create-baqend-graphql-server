@@ -4,10 +4,10 @@ import flatten from '../util/flatten'
 import SchemaParser from './parsers/SchemaParser'
 import ObjectType from './ObjectType'
 
-import { nodeTypes, nodeFields } from  './defs/types/relay/node'
-import { connectionTypes } from  './defs/types/connections'
-import { filterTypes } from  './defs/types/filters'
-import { loaderDefinitions } from './defs/loaders/loaders'
+// import { nodeTypes, nodeFields } from  './defs/types/relay/node'
+// import { connectionTypes } from  './defs/types/connections'
+// import { filterTypes } from  './defs/types/filters'
+// import { loaderDefinitions } from './defs/loaders/loaders'
 
 export default class SchemaTypes {
   constructor(schema) {
@@ -36,7 +36,7 @@ export default class SchemaTypes {
     })
 
     const filterDefs = [
-      filterTypes,
+      // filterTypes,
       this.types.map(type => {
         return type.filterDefs(this.opts)
       })
@@ -51,8 +51,8 @@ export default class SchemaTypes {
     })
 
     const defs = flatten([
-      this.opts.api === 'relay' && nodeTypes,
-      this.opts.api === 'relay' && connectionTypes,
+      // this.opts.api === 'relay' && nodeTypes,
+      // this.opts.api === 'relay' && connectionTypes,
       typeDefs,
       connectionDefs,
       filterDefs,
@@ -61,7 +61,7 @@ export default class SchemaTypes {
     ])
 
     const queryDefs = flatten([
-      this.opts.api === 'relay' && nodeFields,
+      // this.opts.api === 'relay' && nodeFields,
       this.types.map(type => {
         return type.queryDefs(this.opts)
       })
@@ -98,6 +98,7 @@ export default class SchemaTypes {
     const queryResolvers = flatten(this.types.map(type => {
       return type.queryResolvers(this.opts)
     }))
+
 
     const mutationResolvers = flatten(this.types.map(type => {
       return type.mutationResolvers(this.opts)

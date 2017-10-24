@@ -17,5 +17,5 @@ const generateResolvers = (opts, args) => {
 }
 
 export {
-  generateResolvers
+  generateResolvers,
 }
