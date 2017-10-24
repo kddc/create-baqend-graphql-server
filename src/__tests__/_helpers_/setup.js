@@ -19,7 +19,7 @@ const setupGraphQL = () => {
   generateGraphQLDefs({
     file: 'src/__tests__/_schema_.json',
     dest: '.tmp',
-    schema: true
+    schema: false,
   })
 }
 

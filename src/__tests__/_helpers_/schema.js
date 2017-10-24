@@ -1,41 +1,32 @@
+import { merge } from 'lodash'
 import { makeExecutableSchema } from 'graphql-tools'
 // import BaqendResolver from './util/BaqendResolver'
 // import BaqendMutator from './util/BaqendMutator'
-import baqendTypeDefs from '../../server/types/types.js'
-import baqendResolvers from '../../server/types/resolvers.js'
 
-import buildDataloaders from '../../../.tmp/loader.js'
-import typeDefs from '../../../.tmp/typeDefs.js'
-import resolvers from '../../../.tmp/resolvers.js'
+import baseTypeDefs from '../../schema/defs/relay/typeDefs'
+import baseResolvers from '../../schema/defs/relay/resolvers'
 
-const {
-  Query: baqendQueryResolvers,
-  Mutation: baqendMutationResolvers,
-  ...rest
-} = baqendResolvers
+import filterTypeDefs from '../../schema/defs/filters/typeDefs'
 
-const {
-  Query: queryResolvers,
-  Mutation: mutationResolvers
-} = resolvers
+import scalarTypeDefs from '../../schema/defs/scalars/typeDefs'
+import scalarResolvers from '../../schema/defs/scalars/resolvers'
+
+// import buildDataloaders from '../../../.tmp/loader'
+import generatedTypeDefs from '../../../.tmp/typeDefs'
+import generatedResolvers from '../../../.tmp/resolvers'
 
 const schema = makeExecutableSchema({
   typeDefs: [
-    baqendTypeDefs,
-    typeDefs
+    baseTypeDefs,
+    filterTypeDefs,
+    scalarTypeDefs,
+    generatedTypeDefs,
   ],
-  resolvers: {
-    ...baqendResolvers,
-    ...resolvers,
-    Query: {
-      ...baqendQueryResolvers,
-      ...queryResolvers,
-    },
-    Mutation: {
-      ...baqendMutationResolvers,
-      ...mutationResolvers,
-    }
-  }
+  resolvers: merge(
+    baseResolvers,
+    scalarResolvers,
+    generatedResolvers,
+  ),
 })
 
 export default schema
