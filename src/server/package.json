@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node index.js",
-    "bundle": "babel-node bundle.js"
+    "bundle": "babel-node bundle/index.js"
   },
   "keywords": [],
   "author": "",

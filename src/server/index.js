@@ -5,8 +5,8 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { merge } from 'lodash'
 import { db } from 'baqend'
 
-import BaqendResolver from './util/BaqendResolver'
-import BaqendMutator from './util/BaqendMutator'
+import BaqendResolver from './helpers/BaqendResolver'
+import BaqendMutator from './helpers/BaqendMutator'
 
 import buildDataloaders from './schema/generated/loader'
 

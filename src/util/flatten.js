@@ -1,11 +1,9 @@
-const flatten = (arr) => {
-  arr = arr
-    .reduce(
-      (acc, val) => acc.concat(
-        Array.isArray(val) ? flatten(val) : val
-      ),[])
+const flatten = (inputArray) => {
+  let arr
+  arr = inputArray
+    .reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), [])
     .filter(n => n)
-  arr = [ ...new Set(arr) ]
+  arr = [...new Set(arr)]
   return arr
 }
 

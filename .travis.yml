@@ -13,4 +13,5 @@ before_install:
 
 script:
   - yarn install
-  - yarn test
+  - yarn test:generators
+  - yarn test:server

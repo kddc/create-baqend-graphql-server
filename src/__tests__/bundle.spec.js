@@ -1,12 +1,12 @@
-import { graphql } from 'graphql'
 import { db as baqend } from 'baqend/lib'
 
 import schema from './_schema_.json'
-import buildDataloaders from '../../.tmp/loader'
-import BaqendResolver from '../server/helpers/BaqendResolver'
-import BaqendMutator from '../server/helpers/BaqendMutator'
-import executableSchema from './_helpers_/schema'
 
+import bundle from './_helpers_/bundle'
+
+// eslint-disable-next-line no-eval
+eval(bundle)
+const { post } = exports
 const host = 'http://127.0.0.1:8080/v1'
 
 let db
@@ -21,12 +21,11 @@ beforeEach(() => {
 })
 
 beforeEach(() => {
-  // const baqendLoader = buildDataloaders({ db: db })
-  const context = {
-    baqendResolver: new BaqendResolver({ db, loader: buildDataloaders({ db }) }),
-    baqendMutator: new BaqendMutator({ db }),
-  }
-  gql = query => graphql(executableSchema, query, null, context)
+  gql = query => new Promise(res => post(
+    db,
+    { body: { query } },
+    { json: d => res(d) },
+  ))
 })
 
 /* eslint-disable */
@@ -39,17 +38,6 @@ afterEach(() => {
 
 describe('GraphQL requests are working without errors', () => {
   test('it should return an object from a graphql query', async () => {
-    await db.Test({ id: '1', string: 'bla' }).save()
-    // language=GraphQL
-    const query = `{
-      Test(id: "/db/Test/1") {
-        id
-      }
-    }`
-    return gql(query).then(res => expect(res.data.Test.id).toBe('/db/Test/1'))
-  })
-
-  test('it should return an object from a graphql query again', async () => {
     await db.Test({ id: '1', string: 'bla' }).save()
     // language=GraphQL
     const query = `{

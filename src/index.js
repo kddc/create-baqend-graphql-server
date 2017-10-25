@@ -19,28 +19,30 @@ const start = async (args) => {
   const dest = args.dest || 'server'
   if (!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
   if (!args.schema) {
+    if (!IOService.fileExists(`${dest}/bundle`)) IOService.mkDir(`${dest}/bundle`)
+    if (!IOService.fileExists(`${dest}/helpers`)) IOService.mkDir(`${dest}/helpers`)
     if (!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
     if (!IOService.fileExists(`${dest}/schema/generated`)) IOService.mkDir(`${dest}/schema/generated`)
-    if (!IOService.fileExists(`${dest}/util`)) IOService.mkDir(`${dest}/util`)
-    if (!IOService.fileExists(`${dest}/codegen`)) IOService.mkDir(`${dest}/codegen`)
     if (!IOService.fileExists(`${dest}/schema/base`)) IOService.mkDir(`${dest}/schema/base`)
     if (!IOService.fileExists(`${dest}/schema/scalars`)) IOService.mkDir(`${dest}/schema/scalars`)
     if (!IOService.fileExists(`${dest}/schema/filters`)) IOService.mkDir(`${dest}/schema/filters`)
     if (!IOService.fileExists(`${dest}/schema/custom`)) IOService.mkDir(`${dest}/schema/custom`)
 
+    // server files
     IOService.copyFile('src/server/index.js', `${dest}/index.js`)
-    IOService.copyFile('src/server/bundle.js', `${dest}/bundle.js`)
     IOService.copyFile('src/server/package.json', `${dest}/package.json`)
     IOService.copyFile('src/server/.babelrc', `${dest}/.babelrc`)
+    IOService.copyFile('src/server/bundle/index.js', `${dest}/bundle/index.js`)
+    IOService.copyFile('src/server/bundle/util.js', `${dest}/bundle/util.js`)
+    IOService.copyFile('src/server/bundle/bundle.js', `${dest}/bundle/bundle.js`)
 
-    IOService.copyFile('src/server/util/BaqendResolver.js', `${dest}/util/BaqendResolver.js`)
-    IOService.copyFile('src/server/util/BaqendMutator.js', `${dest}/util/BaqendMutator.js`)
-    IOService.copyFile('src/server/util/base64.js', `${dest}/util/base64.js`)
-    IOService.copyFile('src/server/util/parseFilterInput.js', `${dest}/util/parseFilterInput.js`)
-    IOService.copyFile('src/server/util/parseSortByInput.js', `${dest}/util/parseSortByInput.js`)
+    IOService.copyFile('src/server/helpers/BaqendResolver.js', `${dest}/helpers/BaqendResolver.js`)
+    IOService.copyFile('src/server/helpers/BaqendMutator.js', `${dest}/helpers/BaqendMutator.js`)
+    IOService.copyFile('src/server/helpers/base64.js', `${dest}/helpers/base64.js`)
+    IOService.copyFile('src/server/helpers/parseFilterInput.js', `${dest}/helpers/parseFilterInput.js`)
+    IOService.copyFile('src/server/helpers/parseSortByInput.js', `${dest}/helpers/parseSortByInput.js`)
 
-    IOService.copyFile('src/server/codegen/bundle.js', `${dest}/codegen/bundle.js`)
-
+    // schema files
     IOService.copyFile('src/schema/defs/relay/typeDefs.js', `${dest}/schema/base/typeDefs.js`)
     IOService.copyFile('src/schema/defs/relay/resolvers.js', `${dest}/schema/base/resolvers.js`)
 
