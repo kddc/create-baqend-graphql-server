@@ -4,7 +4,13 @@ class BaqendMutator {
     this.db = db
   }
 
-  // Single Objects
+  /**
+   * Inserts an entity and creates the references if neccessary
+   *
+   * @param {String} type - Baqend Class
+   * @param {Object} args - The input args
+   * @returns {Object} - returns the updated entity
+   */
   createEntity(type, { input }, context) {
     const { clientMutationId } = input
     const json = this.transformInput({ type }, input)
@@ -22,6 +28,13 @@ class BaqendMutator {
     })
   }
 
+  /**
+   * Updates an entity and creates the references if neccessary
+   *
+   * @param {String} type - Baqend Class
+   * @param {Object} args - The input args
+   * @returns {Object} - returns the updated entity
+   */
   updateEntity(type, { input }, context) {
     const { clientMutationId, id, ...updates } = input
     const json = this.transformInput({ type }, updates)
@@ -40,6 +53,13 @@ class BaqendMutator {
     })
   }
 
+  /**
+   * Deletes an entity
+   *
+   * @param {String} type - Baqend Class
+   * @param {Object} args - The input args
+   * @returns {Object} - returns the id of the deleted entity
+   */
   deleteEntity(type, { input }, context) {
     const { clientMutationId, id } = input
     return this.db[type].load(id).then(entity => entity.delete().then(() => ({
@@ -48,6 +68,15 @@ class BaqendMutator {
     })))
   }
 
+  /**
+   * Creates or loads references for an entity based on if the field is an id or an object.
+   * For non reference fields the value is simply taken as it is
+   *
+   * @param {String} type - Baqend Class
+   * @param {Array} fields - The field keys
+   * @param {Array} json - The field values
+   * @returns {Promise<Array>} resolvedValues - A array of promises with resolved references
+   */
   resolveFieldValues(type, fields, json, context) {
     const referenceTypes = this.getReferenceTypes(type)
     const resolvedValues = []
@@ -73,6 +102,15 @@ class BaqendMutator {
     })
   }
 
+  /**
+   * Creates or loads references for an entity based on if the field is an id or an object.
+   * For non reference fields the value is simply taken as it is
+   *
+   * @param {String} type - Baqend Class
+   * @param {Array} fields - The field keys
+   * @param {Array} json - The field values
+   * @returns {Promise<Array>} resolvedValues - A array of promises with resolved references
+   */
   resolveReferenceField(type, value) {
     if (typeof value === 'string') {
       const ref = this.db.getReference(value)
@@ -83,6 +121,14 @@ class BaqendMutator {
     return entity.save({ depth })
   }
 
+  /**
+   * Creates a collection with references and decides if a new map, list or set is created
+   *
+   * @param {String} collectionType - The list type
+   * @param {String} type - The type of the list element
+   * @param {Array} value - The json input array
+   * @returns {Promise<Array>} resolvedValues - A array of promises with resolved reference collection
+   */
   resolveCollectionField(collectionType, type, value) {
     if (collectionType === 'Map') {
       return this.resolveMapField(type, value)
@@ -90,10 +136,24 @@ class BaqendMutator {
     return this.resolveListOrSetField(type, value)
   }
 
+  /**
+   * Creates a collection list
+   *
+   * @param {String} type - The type of the list element
+   * @param {Array} value - The json input array
+   * @returns {Promise<Array>} resolvedValues - A array of promises with resolved reference collection
+   */
   resolveListOrSetField(type, entries) {
     return Promise.all(entries.map(entry => this.resolveReferenceField(type, entry)))
   }
 
+  /**
+   * Creates a collection map
+   *
+   * @param {String} type - The type of the list element
+   * @param {Array} value - The json input array
+   * @returns {Promise<Array>} resolvedValues - A array of promises with resolved reference collection
+   */
   resolveMapField(type, entries) {
     const entryValues = Object.keys(entries).map(key => entries[key])
     const entryValuesPromises = entryValues.map(entryValue => this.resolveReferenceField(type, entryValue))
@@ -106,6 +166,14 @@ class BaqendMutator {
     })
   }
 
+  /**
+   * Adds an entry to a collection
+   *
+   * @param {String} type - Baqend Class
+   * @param {String} field - The field of the entity from which a element should be added
+   * @param {String} args - The input arguments
+   * @returns {Object} entity - The entity with a the added entity
+   */
   addEntryToCollection(type, field, { input }, context) {
     let element
     const { clientMutationId, id } = input
@@ -139,13 +207,20 @@ class BaqendMutator {
     })
   }
 
+  /**
+   * Removes an entry from a collection
+   *
+   * @param {String} type - Baqend Class
+   * @param {String} field - The field of the entity from which a element should be removed
+   * @param {String} args - The input arguments
+   * @returns {Object} entity - The entity with a removed entity
+   */
   removeEntryFromCollection(type, field, { input }, context) {
     const { clientMutationId, id } = input
     const { collectionType } = this.getReferenceTypes(type)[field]
     const { entry } = this.getFieldInputArguments('entry', input)
     const element = (entry.key || entry.element) ? (entry.key || entry.element) : entry
     return this.db[type].load(id).then((object) => {
-      console.log(element)
       const partialUpdateOperation = object.partialUpdate().remove(field, element).execute()
       return partialUpdateOperation.then(res => ({
         clientMutationId,
@@ -159,7 +234,6 @@ class BaqendMutator {
    *
    * @param {Object} fieldType - Baqend fieldType
    * @param {Object} input - JSON input object from GraphQL query
-   *
    * @returns {Object} json - transformed input
    */
   transformInput({ type, basic }, input) {
@@ -212,6 +286,11 @@ class BaqendMutator {
     return json
   }
 
+  /**
+   * Parses one input element json and transforms the map input or its child elements
+   *
+   * @returns {Object} json - transformed input
+   */
   parseInputObject({ collectionType, elementType }, input) {
     const json = input
     if (collectionType) {
