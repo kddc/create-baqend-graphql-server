@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars, class-methods-use-this */
 import { connectionFromArray } from 'graphql-relay'
-import parseFilterInput from './util/parseFilterInput'
-import parseSortByInput from './util/parseSortByInput'
+
 import { base64, unbase64 } from './util/base64'
 import { combine, mergeResults } from './util/helpers'
+import parseFilterInput from './util/parseFilterInput'
+import parseSortByInput from './util/parseSortByInput'
 
 class BaqendResolver {
   constructor({ db, loader, api }) {
@@ -12,16 +13,24 @@ class BaqendResolver {
     this.api = api || 'simple'
   }
 
-  // Queries
+  /**
+   * Relay node resolver
+   */
   resolveNodeQuery({ id }, context) {
     const { type } = this.fromGlobalId(id)
     return this.resolveReference(type, id, context)
   }
 
+  /**
+   * Resolves a reference query 
+   */
   resolveReferenceQuery(type, { id }, context) {
     return this.resolveReference(type, id, context)
   }
 
+  /**
+   * Relay node collection resolver
+   */
   resolveNodeCollectionQuery({ ids }, context) {
     return ids.map((id) => {
       const { type } = this.fromGlobalId(id)
@@ -29,35 +38,50 @@ class BaqendResolver {
     })
   }
 
+  /**
+   * Resolves a reference collection query
+   */
   resolveReferenceCollectionQuery(type, args, context) {
     return this.fetchEntities(type, args, context)
   }
 
-  // Single Objects
+  /**
+   * Resolves a single reference using the generated entity loader
+   */
   resolveReference(type, entity, context) {
     return this.loader[type].load(entity)
   }
 
-  // Scalar Collections
+  /**
+   * Resolves a json scalar list and creates a Relay compliant connection object by using the
+   * connectionFromArray coming with GraphQL-Relay.js
+   */
   resolveList(entities, args) {
     const total = entities.length
     const { edges, pageInfo } = connectionFromArray(entities, args)
     return {
-      total,
-      edges,
-      pageInfo,
+      total, edges, pageInfo,
     }
   }
 
+  /**
+   * Resolves a json scalar set by simply returning the json
+   */
   resolveSet(entities, args) {
     return entities
   }
 
-  // Reference Collections
+  /**
+   * Resolves a json reference array set by using the generated entity loader
+   */
   resolveReferenceSet(type, entities, args, context) {
     return entities && this.loader[type].loadMany(entities)
   }
 
+  /**
+   * Resolves a json reference array list by using the generated entity loader and creates a
+   * Relay compliant connection object by using the scalar list resolver with the resolved objects
+   */
   resolveReferenceList(type, entities, args, context) {
     // const extendenArgs = args
     // extendenArgs.filter = {
@@ -70,7 +94,9 @@ class BaqendResolver {
     return entities && this.loader[type].loadMany(entities).then(resolved => this.resolveList(resolved, args))
   }
 
-  // Maps
+  /**
+   * Resolves a json reference map by resolving the keys and values sperately and merging them back together
+   */
   resolveMap(types, entries, context) {
     if (entries) {
       let resolvedKeys
@@ -108,7 +134,6 @@ class BaqendResolver {
    * @param {Number} args.last - limit for backward navigation
    * @param {String} args.before - 'cursor' for backward navigation
    * @param {Object} context - context object from graphql query
-   *
    * @returns {Object} entities - The query result object
    * @returns {Number} entities.total - Total number of matching objects
    * @returns {Array} entities.edges - The edges array
@@ -144,7 +169,6 @@ class BaqendResolver {
    *
    * @param {Object} args - Query params from the BaqendResolver.fetchEntities
    * @param {Number} args.total - total number of matching entities
-   *
    * @returns {Object} forward - The query result for forward Pagination
    * @returns {Array} forward.forwardEdges - Edges array with with node objects for Relay.
    * The nodes contain an extra id property for getting merged with the backwards edges
@@ -183,7 +207,6 @@ class BaqendResolver {
    *
    * @param {Object} args - Query params from the BaqendResolver.fetchEntities
    * @param {Number} args.total - total number of matching entities
-   *
    * @returns {Object} backward - The query result for forward Pagination
    * @returns {Array} backward.backwardEdges - Edges array with with node objects for Relay.
    * The nodes contain an extra id property for getting merged with the forward edges
@@ -255,7 +278,6 @@ class BaqendResolver {
    * @params {Array} edges - the merged result of forward and backward pagination results
    * @params {Number} total - total number of results
    * @params first, after, last, before
-   *
    * @returns {Array} entities
    */
   getPageInfo(edges, total, first, after, last, before) {
@@ -291,6 +313,13 @@ class BaqendResolver {
     return (!!last || !!before)
   }
 
+  /**
+   * Creates a base64 encoded cursor, containing information about the position in the list and the
+   * offset for pagination in both directions
+   *
+   * @params {Object} - args
+   * @returns {String} - base64 encode cursor
+   */
   createCursor({
     total, index, offset, backward,
   }) {
@@ -307,6 +336,12 @@ class BaqendResolver {
     // return cursor
   }
 
+  /**
+   * Reads the base64 encode cursor
+   *
+   * @params {String} - base64 encoded cursor
+   * @returns {Object} - decoded cursor
+   */
   readCursor(cursor) {
     if (cursor) {
       const string = unbase64(cursor)
@@ -331,6 +366,12 @@ class BaqendResolver {
     }
   }
 
+  /**
+   * Extracts the Baqend class from a Baqend id
+   *
+   * @params {String} - id
+   * @returns {Object} - json containing type and id
+   */
   fromGlobalId(id) {
     return {
       type: id.split('/')[2],
