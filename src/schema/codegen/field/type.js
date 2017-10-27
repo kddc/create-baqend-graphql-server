@@ -26,23 +26,23 @@ const relay = ({ name, fieldType, elementType }) => {
         ${name}: [${keyType}${valueType}MapEntry]
       `
     } else if (collectionType === 'List' || collectionType === 'Set') {
-      const valueFieldType = elementType.types[0].fieldType
+      // const valueFieldType = elementType.types[0].fieldType
       const valueElementType = elementType.types[0].elementType
       if (collectionType === 'Set') {
-        let args = ''
-        if (valueFieldType === 'reference') {
-          args = `(filter: ${valueElementType}Filter)`
-        }
+        const args = ''
+        // if (valueFieldType === 'reference') {
+        //   args = `(filter: ${valueElementType}Filter)`
+        // }
         definition = codeBlock`
           ${name}${args}: [${valueElementType}]
         `
       } else {
-        let args = ''
-        if (valueFieldType === 'reference') {
-          args = `(filter: ${valueElementType}Filter, sortBy: ${valueElementType}SortBy, ${connectionArgs})`
-        } else {
-          args = `(${connectionArgs})`
-        }
+        const args = `(${connectionArgs})`
+        // if (valueFieldType === 'reference') {
+        //   args = `(filter: ${valueElementType}Filter, sortBy: ${valueElementType}SortBy, ${connectionArgs})`
+        // } else {
+        //   args = `(${connectionArgs})`
+        // }
         definition = codeBlock`
           ${name}${args}: ${valueElementType}Connection
         `

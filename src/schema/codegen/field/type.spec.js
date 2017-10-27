@@ -64,7 +64,7 @@ describe('Generate field type definition', () => {
       },
     }
     const expected = codeBlock`
-      referenceList(filter: TestReferenceFilter, sortBy: TestReferenceSortBy, first: Int, after: String, last: Int, before: String): TestReferenceConnection
+      referenceList(first: Int, after: String, last: Int, before: String): TestReferenceConnection
     `
     const definition = generateFieldTypeDefinitions({}, params)
     expect(definition[0]).toEqual(expected)
@@ -112,7 +112,7 @@ describe('Generate field type definition', () => {
       },
     }
     const expected = codeBlock`
-      referenceSet(filter: TestReferenceFilter): [TestReference]
+      referenceSet: [TestReference]
     `
     const definition = generateFieldTypeDefinitions({}, params)
     expect(definition[0]).toEqual(expected)
