@@ -2,7 +2,6 @@
 node_modules
 tmp
 dist
-#/server
-/server2
+/server
 /.tmp
 /coverage
