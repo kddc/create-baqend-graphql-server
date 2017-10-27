@@ -3,8 +3,8 @@ import { db as baqend } from 'baqend/lib'
 
 import schema from './_schema_.json'
 import buildDataloaders from '../../.tmp/loader'
-import BaqendResolver from '../server/helpers/BaqendResolver'
-import BaqendMutator from '../server/helpers/BaqendMutator'
+import BaqendResolver from '../server/src/BaqendResolver'
+import BaqendMutator from '../server/src/BaqendMutator'
 import executableSchema from './_helpers_/schema'
 
 const host = 'http://127.0.0.1:8080/v1'

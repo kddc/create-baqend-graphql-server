@@ -21,15 +21,15 @@ const relay = ({ name, connection }) => {
         input ${ucfirst(addEntityName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}EntryIds: ${keyType.elementType}${valueType.elementType}MapInputIds
-          ${connection.name}Entry: ${keyType.elementType}${valueType.elementType}MapInput
+          entryIds: ${keyType.elementType}${valueType.elementType}MapInputIds
+          entry: ${keyType.elementType}${valueType.elementType}MapInput
         }
       `)
       definitions.push(codeBlock`
         input ${ucfirst(removeEntityName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}EntryIds: ${keyType.elementType}${valueType.elementType}MapInputIds
+          entryIds: ${keyType.elementType}${valueType.elementType}MapInputIds
         }
       `)
     } else {
@@ -37,14 +37,14 @@ const relay = ({ name, connection }) => {
         input ${ucfirst(addEntityName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}Entry: ${keyType.elementType}${valueType.elementType}MapInput
+          entry: ${keyType.elementType}${valueType.elementType}MapInput
         }
       `)
       definitions.push(codeBlock`
         input ${ucfirst(removeEntityName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}Entry: ${keyType.elementType}${valueType.elementType}MapInput
+          entry: ${keyType.elementType}${valueType.elementType}MapInput
         }
       `)
     }
@@ -57,15 +57,15 @@ const relay = ({ name, connection }) => {
         input ${ucfirst(addElementName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}EntryId: ID
-          ${connection.name}Entry: ${valueType.elementType}Input
+          entryId: ID
+          entry: ${valueType.elementType}Input
         }
       `)
       definitions.push(codeBlock`
         input ${ucfirst(removeElementName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}EntryId: ID
+          entryId: ID
         }
       `)
     } else {
@@ -73,14 +73,14 @@ const relay = ({ name, connection }) => {
         input ${ucfirst(addElementName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}Entry: ${valueType.elementType}${(valueType.fieldType === 'embedded' && 'Input') || ''}
+          entry: ${valueType.elementType}${(valueType.fieldType === 'embedded' && 'Input') || ''}
         }
       `)
       definitions.push(codeBlock`
         input ${ucfirst(removeElementName)}Input {
           clientMutationId: String!
           id: ID!
-          ${connection.name}Entry: ${valueType.elementType}${(valueType.fieldType === 'embedded' && 'Input') || ''}
+          entry: ${valueType.elementType}${(valueType.fieldType === 'embedded' && 'Input') || ''}
         }
       `)
     }

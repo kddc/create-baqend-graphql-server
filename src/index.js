@@ -20,13 +20,14 @@ const start = async (args) => {
   if (!IOService.fileExists(`${dest}`)) IOService.mkDir(`${dest}`)
   if (!args.schema) {
     if (!IOService.fileExists(`${dest}/bundle`)) IOService.mkDir(`${dest}/bundle`)
-    if (!IOService.fileExists(`${dest}/helpers`)) IOService.mkDir(`${dest}/helpers`)
-    if (!IOService.fileExists(`${dest}/schema`)) IOService.mkDir(`${dest}/schema`)
-    if (!IOService.fileExists(`${dest}/schema/generated`)) IOService.mkDir(`${dest}/schema/generated`)
-    if (!IOService.fileExists(`${dest}/schema/base`)) IOService.mkDir(`${dest}/schema/base`)
-    if (!IOService.fileExists(`${dest}/schema/scalars`)) IOService.mkDir(`${dest}/schema/scalars`)
-    if (!IOService.fileExists(`${dest}/schema/filters`)) IOService.mkDir(`${dest}/schema/filters`)
-    if (!IOService.fileExists(`${dest}/schema/custom`)) IOService.mkDir(`${dest}/schema/custom`)
+    if (!IOService.fileExists(`${dest}/src`)) IOService.mkDir(`${dest}/src`)
+    if (!IOService.fileExists(`${dest}/src/util`)) IOService.mkDir(`${dest}/src/util`)
+    if (!IOService.fileExists(`${dest}/src/schema`)) IOService.mkDir(`${dest}/src/schema`)
+    if (!IOService.fileExists(`${dest}/src/schema/generated`)) IOService.mkDir(`${dest}/src/schema/generated`)
+    if (!IOService.fileExists(`${dest}/src/schema/base`)) IOService.mkDir(`${dest}/src/schema/base`)
+    if (!IOService.fileExists(`${dest}/src/schema/scalars`)) IOService.mkDir(`${dest}/src/schema/scalars`)
+    if (!IOService.fileExists(`${dest}/src/schema/filters`)) IOService.mkDir(`${dest}/src/schema/filters`)
+    if (!IOService.fileExists(`${dest}/src/schema/custom`)) IOService.mkDir(`${dest}/src/schema/custom`)
 
     // server files
     IOService.copyFile('src/server/index.js', `${dest}/index.js`)
@@ -36,26 +37,27 @@ const start = async (args) => {
     IOService.copyFile('src/server/bundle/util.js', `${dest}/bundle/util.js`)
     IOService.copyFile('src/server/bundle/bundle.js', `${dest}/bundle/bundle.js`)
 
-    IOService.copyFile('src/server/helpers/BaqendResolver.js', `${dest}/helpers/BaqendResolver.js`)
-    IOService.copyFile('src/server/helpers/BaqendMutator.js', `${dest}/helpers/BaqendMutator.js`)
-    IOService.copyFile('src/server/helpers/base64.js', `${dest}/helpers/base64.js`)
-    IOService.copyFile('src/server/helpers/parseFilterInput.js', `${dest}/helpers/parseFilterInput.js`)
-    IOService.copyFile('src/server/helpers/parseSortByInput.js', `${dest}/helpers/parseSortByInput.js`)
+    IOService.copyFile('src/server/src/BaqendResolver.js', `${dest}/src/BaqendResolver.js`)
+    IOService.copyFile('src/server/src/BaqendMutator.js', `${dest}/src/BaqendMutator.js`)
+    IOService.copyFile('src/server/src/util/base64.js', `${dest}/src/util/base64.js`)
+    IOService.copyFile('src/server/src/util/helpers.js', `${dest}/src/util/helpers.js`)
+    IOService.copyFile('src/server/src/util/parseFilterInput.js', `${dest}/src/util/parseFilterInput.js`)
+    IOService.copyFile('src/server/src/util/parseSortByInput.js', `${dest}/src/util/parseSortByInput.js`)
 
     // schema files
-    IOService.copyFile('src/schema/defs/relay/typeDefs.js', `${dest}/schema/base/typeDefs.js`)
-    IOService.copyFile('src/schema/defs/relay/resolvers.js', `${dest}/schema/base/resolvers.js`)
+    IOService.copyFile('src/schema/defs/relay/typeDefs.js', `${dest}/src/schema/base/typeDefs.js`)
+    IOService.copyFile('src/schema/defs/relay/resolvers.js', `${dest}/src/schema/base/resolvers.js`)
 
-    IOService.copyFile('src/schema/defs/scalars/typeDefs.js', `${dest}/schema/scalars/typeDefs.js`)
-    IOService.copyFile('src/schema/defs/scalars/resolvers.js', `${dest}/schema/scalars/resolvers.js`)
+    IOService.copyFile('src/schema/defs/scalars/typeDefs.js', `${dest}/src/schema/scalars/typeDefs.js`)
+    IOService.copyFile('src/schema/defs/scalars/resolvers.js', `${dest}/src/schema/scalars/resolvers.js`)
 
-    IOService.copyFile('src/schema/defs/filters/typeDefs.js', `${dest}/schema/filters/typeDefs.js`)
+    IOService.copyFile('src/schema/defs/filters/typeDefs.js', `${dest}/src/schema/filters/typeDefs.js`)
 
-    if (!IOService.fileExists(`${dest}/schema/custom/typeDefs.js`)) {
-      IOService.copyFile('src/schema/defs/custom/typeDefs.js', `${dest}/schema/custom/typeDefs.js`)
+    if (!IOService.fileExists(`${dest}/src/schema/custom/typeDefs.js`)) {
+      IOService.copyFile('src/schema/defs/custom/typeDefs.js', `${dest}/src/schema/custom/typeDefs.js`)
     }
-    if (!IOService.fileExists(`${dest}/schema/custom/resolvers.js`)) {
-      IOService.copyFile('src/schema/defs/custom/resolvers.js', `${dest}/schema/custom/resolvers.js`)
+    if (!IOService.fileExists(`${dest}/src/schema/custom/resolvers.js`)) {
+      IOService.copyFile('src/schema/defs/custom/resolvers.js', `${dest}/src/schema/custom/resolvers.js`)
     }
   }
 
@@ -80,9 +82,9 @@ const start = async (args) => {
     IOService.writeFile(`${dest}/typeDefs.js`, types)
     IOService.writeFile(`${dest}/resolvers.js`, resolvers)
   } else {
-    IOService.writeFile(`${dest}/schema/generated/loader.js`, loader)
-    IOService.writeFile(`${dest}/schema/generated/typeDefs.js`, types)
-    IOService.writeFile(`${dest}/schema/generated/resolvers.js`, resolvers)
+    IOService.writeFile(`${dest}/src/schema/generated/loader.js`, loader)
+    IOService.writeFile(`${dest}/src/schema/generated/typeDefs.js`, types)
+    IOService.writeFile(`${dest}/src/schema/generated/resolvers.js`, resolvers)
   }
   console.log('Generated your GraphQL server succesfully. Whoop Whoop!')
 }

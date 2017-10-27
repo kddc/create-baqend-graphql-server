@@ -1,7 +1,6 @@
 import { db as baqend } from 'baqend/lib'
 
 import schema from './_schema_.json'
-
 import bundle from './_helpers_/bundle'
 
 // eslint-disable-next-line no-eval

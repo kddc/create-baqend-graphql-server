@@ -132,15 +132,15 @@ describe('Generate object connection input definitions', () => {
         input AddTestReferenceToTestObjectReferenceListInput {
           clientMutationId: String!
           id: ID!
-          referenceListEntryId: ID
-          referenceListEntry: TestReferenceInput
+          entryId: ID
+          entry: TestReferenceInput
         }
       `,
       codeBlock`
         input RemoveTestReferenceFromTestObjectReferenceListInput {
           clientMutationId: String!
           id: ID!
-          referenceListEntryId: ID
+          entryId: ID
         }
       `,
     ]
@@ -169,14 +169,14 @@ describe('Generate object connection input definitions', () => {
         input AddStringToTestObjectStringListInput {
           clientMutationId: String!
           id: ID!
-          stringListEntry: String
+          entry: String
         }
       `,
       codeBlock`
         input RemoveStringFromTestObjectStringListInput {
           clientMutationId: String!
           id: ID!
-          stringListEntry: String
+          entry: String
         }
       `,
     ]
@@ -205,14 +205,14 @@ describe('Generate object connection input definitions', () => {
         input AddEmbeddedToTestObjectEmbeddedListInput {
           clientMutationId: String!
           id: ID!
-          embeddedListEntry: EmbeddedInput
+          entry: EmbeddedInput
         }
       `,
       codeBlock`
         input RemoveEmbeddedFromTestObjectEmbeddedListInput {
           clientMutationId: String!
           id: ID!
-          embeddedListEntry: EmbeddedInput
+          entry: EmbeddedInput
         }
       `,
     ]
@@ -245,15 +245,15 @@ describe('Generate object connection input definitions', () => {
         input AddEntryToTestObjectReferenceMapInput {
           clientMutationId: String!
           id: ID!
-          referenceMapEntryIds: StringTestReferenceMapInputIds
-          referenceMapEntry: StringTestReferenceMapInput
+          entryIds: StringTestReferenceMapInputIds
+          entry: StringTestReferenceMapInput
         }
       `,
       codeBlock`
         input RemoveEntryFromTestObjectReferenceMapInput {
           clientMutationId: String!
           id: ID!
-          referenceMapEntryIds: StringTestReferenceMapInputIds
+          entryIds: StringTestReferenceMapInputIds
         }
       `,
     ]
@@ -286,14 +286,14 @@ describe('Generate object connection input definitions', () => {
         input AddEntryToTestObjectStringMapInput {
           clientMutationId: String!
           id: ID!
-          stringMapEntry: StringStringMapInput
+          entry: StringStringMapInput
         }
       `,
       codeBlock`
         input RemoveEntryFromTestObjectStringMapInput {
           clientMutationId: String!
           id: ID!
-          stringMapEntry: StringStringMapInput
+          entry: StringStringMapInput
         }
       `,
     ]
@@ -326,14 +326,14 @@ describe('Generate object connection input definitions', () => {
         input AddEntryToTestObjectEmbeddedMapInput {
           clientMutationId: String!
           id: ID!
-          embeddedMapEntry: StringEmbeddedMapInput
+          entry: StringEmbeddedMapInput
         }
       `,
       codeBlock`
         input RemoveEntryFromTestObjectEmbeddedMapInput {
           clientMutationId: String!
           id: ID!
-          embeddedMapEntry: StringEmbeddedMapInput
+          entry: StringEmbeddedMapInput
         }
       `,
     ]
@@ -366,15 +366,15 @@ describe('Generate object connection input definitions', () => {
         input AddEntryToTestObjectRefRefMapInput {
           clientMutationId: String!
           id: ID!
-          refRefMapEntryIds: TestReferenceTestReferenceMapInputIds
-          refRefMapEntry: TestReferenceTestReferenceMapInput
+          entryIds: TestReferenceTestReferenceMapInputIds
+          entry: TestReferenceTestReferenceMapInput
         }
       `,
       codeBlock`
         input RemoveEntryFromTestObjectRefRefMapInput {
           clientMutationId: String!
           id: ID!
-          refRefMapEntryIds: TestReferenceTestReferenceMapInputIds
+          entryIds: TestReferenceTestReferenceMapInputIds
         }
       `,
     ]

@@ -12,12 +12,12 @@ import {
 } from '../../server/bundle/util'
 
 const start = () => {
-  const base64 = readFile('src/server/helpers/base64.js')
-  // console.log(base64)
-  const parseFilterInput = readFile('src/server/helpers/parseFilterInput.js')
-  const parseSortByInput = readFile('src/server/helpers/parseSortByInput.js')
-  const baqendResolver = readFile('src/server/helpers/BaqendResolver.js')
-  const baqendMutator = readFile('src/server/helpers/BaqendMutator.js')
+  const base64 = readFile('src/server/src/util/base64.js')
+  const helpers = readFile('src/server/src/util/helpers.js')
+  const parseFilterInput = readFile('src/server/src/util/parseFilterInput.js')
+  const parseSortByInput = readFile('src/server/src/util/parseSortByInput.js')
+  const baqendResolver = readFile('src/server/src/BaqendResolver.js')
+  const baqendMutator = readFile('src/server/src/BaqendMutator.js')
 
   const loader = readFile('./.tmp/loader.js')
 
@@ -33,6 +33,7 @@ const start = () => {
 
   const files = [
     base64,
+    helpers,
     parseFilterInput,
     parseSortByInput,
     baqendResolver,
