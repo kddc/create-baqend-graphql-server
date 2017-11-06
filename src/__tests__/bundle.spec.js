@@ -23,7 +23,10 @@ beforeEach(() => {
   gql = query => new Promise(res => post(
     db,
     { body: { query } },
-    { json: d => res(d) },
+    {
+      json: d => res(d),
+      set: () => true,
+    },
   ))
 })
 
