@@ -70,6 +70,22 @@ const typeDefs = `
     nin: [JSON!]
     exists: Boolean
   }
+
+  input GeoPointFilter {
+    nearSphere: NearSphereFilter
+  }
+  input NearSphereFilter {
+    geometry: Geometry
+    maxDistance: Float
+  }
+  input Geometry {
+    coordinates: [Float]
+    type: GeometryType
+  }
+  enum GeometryType {
+    Point
+  }
+
   input ObjectFilter {
     exists: Boolean
   }

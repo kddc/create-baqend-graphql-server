@@ -89,6 +89,8 @@ class BaqendMutator {
         } else {
           value = this.resolveReferenceField(elementType.type, json[field])
         }
+      } else if (typeof json[field] === 'object' && json[field].latitude && json[field].longitude) {
+        value = new this.db.GeoPoint(json[field].latitude, json[field].longitude)
       } else {
         value = json[field]
       }
