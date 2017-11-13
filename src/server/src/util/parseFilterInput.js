@@ -1,28 +1,19 @@
-const parseFilterInput = (inputFilterObject, propertyLevel = true) => {
-  const filterObject = { ...inputFilterObject }
-  const isMongoKey = !!Object.keys(filterObject).filter(property => property.match(/(nearSphere)/)).length
-  const isLogicalLevel = !!Object.keys(filterObject).filter(property => property.match(/(and|or|$and|$or)/)).length
-  const isPropertyLevel = isLogicalLevel ? false : propertyLevel
-  if (isLogicalLevel) {
+const keywords = [
+  'and', 'or',
+  'eq', 'ne', 'in', 'nin', 'exists', 'gt', 'gte', 'lt', 'lte', 'regex',
+  'nearSphere', 'geometry', 'maxDistance'
+]
+
+const parseFilterInput = (inputFilterObject) => {
+  const filterObject = inputFilterObject
+  if (typeof filterObject === 'object') {
     Object.keys(filterObject).forEach((key) => {
-      filterObject[`$${key.replace('$', '')}`] = filterObject[key].map((childFilterObject) => {
-        return parseFilterInput(childFilterObject, true)
-      })
-      delete filterObject[key]
-    })
-  } else if (isMongoKey) {
-    Object.keys(filterObject).forEach((key) => {
-      filterObject[`$${key.replace('$', '')}`] = parseFilterInput(filterObject[key], false)
-      delete filterObject[key]
-    })
-  } else if (isPropertyLevel) {
-    Object.keys(filterObject).forEach((key) => {
-      filterObject[key] = parseFilterInput(filterObject[key], false)
-    })
-  } else {
-    Object.keys(filterObject).forEach((key) => {
-      filterObject[`$${key.replace('$', '')}`] = filterObject[key]
-      delete filterObject[key]
+      if (keywords.indexOf(key) !== -1) {
+        filterObject[`$${key}`] = parseFilterInput(filterObject[key])
+        delete filterObject[key]
+      } else {
+        filterObject[key] = parseFilterInput(filterObject[key])
+      }
     })
   }
   return filterObject

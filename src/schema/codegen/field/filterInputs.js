@@ -13,7 +13,11 @@ const relay = ({ name, fieldType, elementType }) => {
     definitions.push(codeBlock`
       ${name}: CollectionFilter
     `)
-  } else if (fieldType === 'reference' || fieldType === 'embedded') {
+  } else if (fieldType === 'reference') {
+    definitions.push(codeBlock`
+      ${name}: ObjectFilter
+    `)
+  } else if (fieldType === 'embedded') {
     definitions.push(codeBlock`
       ${name}: ${elementType}Filter
     `)

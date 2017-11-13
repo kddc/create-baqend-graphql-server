@@ -23,7 +23,7 @@ describe('Generate field filter input definitions', () => {
       elementType: 'TestReference',
     }
     const expected = codeBlock`
-      reference: TestReferenceFilter
+      reference: ObjectFilter
     `
     const definition = generateFieldFilterInputDefinitions({}, params)
     expect(definition.length).toBe(1)

@@ -87,7 +87,16 @@ const typeDefs = `
   }
 
   input ObjectFilter {
+    eq: String
+    ne: String
+    in: [String!]
+    nin: [String!]
     exists: Boolean
+    gt: String
+    gte: String
+    lt: String
+    lte: String
+    regex: String
   }
   input CollectionFilter {
     exists: Boolean
