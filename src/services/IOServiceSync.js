@@ -3,16 +3,24 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 
 class IOServiceSync {
+  mkPath(pathname) {
+    if (pathname.startsWith("./")) {
+      return path.join(__dirname, '../..', pathname)
+    } else {
+      return path.join(process.cwd(), pathname)
+    }
+  }
+
   readFile(filename, encoding = 'utf8') {
-    return fs.readFileSync(path.join(process.cwd(), filename), encoding)
+    return fs.readFileSync(this.mkPath(filename), encoding)
   }
 
   writeFile(filename, data, encoding = 'utf8') {
-    return fs.writeFileSync(path.join(process.cwd(), filename), data, { encoding })
+    return fs.writeFileSync(this.mkPath(filename), data, { encoding })
   }
 
   fileExists(filename) {
-    return fs.existsSync(path.join(process.cwd(), filename))
+    return fs.existsSync(this.mkPath(filename))
   }
 
   copyFile(src, dest) {
@@ -20,7 +28,7 @@ class IOServiceSync {
   }
 
   mkDir(directory) {
-    return mkdirp.sync(path.join(process.cwd(), directory))
+    return mkdirp.sync(this.mkPath(directory))
   }
 }
 
