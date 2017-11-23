@@ -22,7 +22,7 @@ class BaqendResolver {
   }
 
   /**
-   * Resolves a reference query 
+   * Resolves a reference query
    */
   resolveReferenceQuery(type, { id }, context) {
     return this.resolveReference(type, id, context)
@@ -91,7 +91,9 @@ class BaqendResolver {
     //   ],
     // }
     // return this.fetchEntities(type, extendenArgs, context)
-    return entities && this.loader[type].loadMany(entities).then(resolved => this.resolveList(resolved, args))
+    return entities && this.loader[type].loadMany(entities).then((resolved) => {
+      return this.resolveList(resolved, args)
+    })
   }
 
   /**
