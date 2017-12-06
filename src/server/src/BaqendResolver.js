@@ -49,7 +49,7 @@ class BaqendResolver {
    * Resolves a single reference using the generated entity loader
    */
   resolveReference(type, entity, context) {
-    return this.loader[type].load(entity)
+    return entity && this.loader[type].load(entity)
   }
 
   /**

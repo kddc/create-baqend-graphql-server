@@ -4,7 +4,7 @@ export default class SchemaParser {
   static parseSchema(schemaString) {
     let schema = JSON.parse(schemaString)
     schema = schema.filter((type) => {
-      const isAdministrative = !type.class.match(/(speedKit\.Asset|logs\.AppLog|logs\.AccessLog)/)
+      const isAdministrative = !type.class.match(/(speedKit\.Asset|logs\.AppLog|logs\.AccessLog|jobs\.Status|jobs\.Definition)/)
       const isEmpty = !!Object.keys(type.fields).length
       return isAdministrative && isEmpty
     })
